@@ -4,11 +4,12 @@ This Rails 3 template will get you up and running with Mongoid, Devise, Formtast
 
 ## Usage
 
-  rails new app_name -m rails3-quickstart.rb
+  rails new app_name -m http://github.com/cwsaylor/rails3-quickstart/raw/master/rails3-quickstart.rb
 
 ## Thanks
 
-I would like to thank Daniel Kehoe for the awesome Rails 3 template tutorial: http://github.com/fortuity/rails3-mongoid-devise
+I would like to thank Daniel Kehoe for the awesome Rails 3 template tutorial:
+[http://github.com/fortuity/rails3-mongoid-devise](http://github.com/fortuity/rails3-mongoid-devise)
 
 ## Copyright
 
