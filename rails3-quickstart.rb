@@ -47,7 +47,7 @@ puts "Adding gems to Gemfile..."
 gsub_file 'Gemfile', /gem \'sqlite3-ruby/, '# gem \'sqlite3-ruby'
 gem 'mongoid', '2.0.0.beta.16'
 gem 'bson_ext', '1.0.4'
-gem 'devise', '1.1.1'
+gem "devise", :git => "http://github.com/plataformatec/devise.git"
 gem 'formtastic', :git => "http://github.com/justinfrench/formtastic.git", :branch => "rails3"
 gem 'flutie'
 gem "factory_girl_rails"
