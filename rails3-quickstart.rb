@@ -112,13 +112,13 @@ RUBY
 end
 
 #----------------------------------------------------------------------------
-# Setup testing for Mongoid
+# Setup testing for Mongoid and test_notifier
 #----------------------------------------------------------------------------
 run 'rmdir test/fixtures'
 gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
 gsub_file 'test/test_helper.rb', /require 'rails\/test_help'/ do <<-FILE
-  require 'rails/test_help'
-  require "test_notifier/runner/test_unit"
+require 'rails/test_help'
+require "test_notifier/runner/test_unit"
 FILE
 end
 gsub_file 'test/test_helper.rb', /end/ do <<-FILE
