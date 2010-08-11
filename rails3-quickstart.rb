@@ -171,7 +171,6 @@ generate "devise:views"
 
 gsub_file "app/models/#{user_file_name}.rb", /^end$/ do
 <<-RUBY
-  validates_uniqueness_of :email
   attr_accessible :email, :password, :password_confirmation
 end
 RUBY
