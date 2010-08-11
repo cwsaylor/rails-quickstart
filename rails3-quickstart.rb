@@ -116,6 +116,11 @@ end
 #----------------------------------------------------------------------------
 run 'rmdir test/fixtures'
 gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
+gsub_file 'test/test_helper.rb', /require 'rails\/test_help'/ do <<-FILE
+  require 'rails/test_help'
+  require "test_notifier/runner/test_unit"
+FILE
+end
 gsub_file 'test/test_helper.rb', /end/ do <<-FILE
   setup :drop_collections
   
@@ -172,7 +177,7 @@ RUBY
 end
 
 gsub_file "test/factories/#{user_factory_file}.rb", /^end$/ do
-<<-RUBY
+<<-'RUBY'
   f.sequence(:email) {|n| "person#{n}@example.com" }
   f.password "testing"
   f.password_confirmation "testing"
