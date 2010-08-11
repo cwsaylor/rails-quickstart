@@ -129,6 +129,7 @@ gsub_file 'test/test_helper.rb', /end/ do <<-FILE
   def drop_collections
     Mongoid.master.collections.select {|c| c.name !~ /system/ }.each(&:drop)
   end
+end
   FILE
 end
 
