@@ -23,7 +23,6 @@ user_model_name = user.classify
 puts "removing unneeded files..."
 run 'rm config/database.yml'
 run 'rm public/index.html'
-run 'rm public/favicon.ico'
 run 'rm public/images/rails.png'
 run 'rm public/javascripts/controls.js'
 run 'rm public/javascripts/dragdrop.js'
