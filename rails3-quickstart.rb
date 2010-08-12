@@ -223,14 +223,14 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 </head>
 <body>
 
-<div class="row">
+<div class="row top">
 	<div class="column grid_12">
 	  <h1>#{domain}</h1>
 	</div>
 </div>
 
 
-<div class="row">
+<div class="row bottom">
 	<div class="column grid_12">
 	  <%= yield %>
 	</div>
