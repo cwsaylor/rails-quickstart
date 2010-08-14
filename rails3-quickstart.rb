@@ -6,6 +6,7 @@
 
 puts "Setting up a new Rails 3 app for Mongoid, Devise, Formtastic, Factory Girl, HTML5, jQuery, Heroku..."
 
+site_name = ask("What is the name of the site?")
 domain = ask("What domain would you like to use?")
 email = ask("What email would you like to send from?")
 user = ask("What would you like to call your devise model? e.g. User")
@@ -216,7 +217,7 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>#{domain}</title>
+  <title>#{site_name}</title>
   <%= stylesheet_link_tag :flutie, '#{grid_file}', 'application' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
@@ -225,7 +226,7 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 
 <div class="row top">
 	<div class="column grid_12">
-	  <h1>#{domain}</h1>
+	  <h1>#{site_name}</h1>
 	</div>
 </div>
 
