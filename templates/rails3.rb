@@ -4,26 +4,28 @@
 #TODO Setup mail for heroku addon
 #TODO Generate formatastic forms for devise
 
-puts "Setting up a new Rails 3 app for Mongoid, Devise, Formtastic, Factory Girl, HTML5, jQuery"
+puts "Setting up a new Rails 3 app for Mongoid/AR, Devise, Formtastic, Factory Girl, HTML5, jQuery..."
 
 site_name = ask("What is the name of the site?")
-domain = ask("What domain would you like to use?")
-email = ask("What email would you like to send from?")
-user = ask("What would you like to call your devise model? e.g. User")
-mongo = ask("Use Mongo? y/n")
+domain    = ask("What domain would you like to use?")
+email     = ask("What email would you like to send from?")
+user      = ask("What would you like to call your devise model? e.g. User")
+mongo     = ask("Use Mongo? y/n")
 
-orm = mongo == "y" ? "mongoid" : "active_record"
-user_file_name = user.underscore.singularize
+orm               = mongo == "y" ? "mongoid" : "active_record"
+user_file_name    = user.underscore.singularize
 user_factory_file = user.underscore.pluralize
-user_model_name = user.classify
+user_model_name   = user.classify
 
 #----------------------------------------------------------------------------
 # Remove the usual cruft
 #----------------------------------------------------------------------------
 puts "removing unneeded files..."
+
 if mongo == "y"
   run 'rm config/database.yml'
 end
+
 run 'rm public/index.html'
 run 'rm public/images/rails.png'
 run 'rm public/javascripts/controls.js'
@@ -41,28 +43,39 @@ run 'curl -L http://code.jquery.com/jquery-1.4.2.min.js > public/javascripts/jqu
 run 'curl -L http://github.com/rails/jquery-ujs/raw/master/src/rails.js > public/javascripts/rails.js'
 
 #----------------------------------------------------------------------------
+# Download stylesheets
+#----------------------------------------------------------------------------
+run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/reset.css > public/stylesheets/reset.css'
+run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/960.css > public/stylesheets/960.css'
+run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/960_24_col.css > public/stylesheets/960_24_col.css'
+run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/application.css > public/stylesheets/application.css'
+
+#----------------------------------------------------------------------------
 # Add gems to Gemfile
 #----------------------------------------------------------------------------
-puts "Adding gems to Gemfile..."
+puts "installing gems..."
+
 gsub_file 'Gemfile', /gem \'sqlite3-ruby/, '# gem \'sqlite3-ruby'
+
 if mongo == "y"
   gem 'mongoid', '2.0.0.beta.17'
   gem 'bson_ext', '1.0.4'
 end
+
 gem 'devise', :git => 'http://github.com/plataformatec/devise.git'
 gem 'formtastic'
 gem 'factory_girl_rails'
 gem 'rails3-generators', :group => :development
 
-puts "installing gems (takes a few minutes!)..."
 run 'bundle install'
 
 #----------------------------------------------------------------------------
 # Tweak config/application.rb for Mongoid, Factory Girl, jQuery
 #----------------------------------------------------------------------------
-puts "updating config/application.rb"
+puts "updating config/application.rb with the orm, factory girl and jquery..."
+
 gsub_file 'config/application.rb', /# Configure the default encoding used in templates for Ruby 1.9./ do
-<<-RUBY
+<<-FILE
 config.generators do |g|
       g.orm             :#{orm}
       g.test_framework  :test_unit, :fixture_replacement => :factory_girl
@@ -72,18 +85,20 @@ config.generators do |g|
     config.action_view.javascript_expansions[:defaults] = ['jquery-1.4.2.min', 'rails']
     
     # Configure the default encoding used in templates for Ruby 1.9.
-RUBY
+FILE
 end
 
 #----------------------------------------------------------------------------
 # Prevent logging of passwords
 #----------------------------------------------------------------------------
 puts "prevent logging of passwords..."
+
 gsub_file 'config/application.rb', /:password/, ':password, :password_confirmation'
 
 #----------------------------------------------------------------------------
 # Remove fixtures
 #----------------------------------------------------------------------------
+puts "death to fixtures..."
 run 'rmdir test/fixtures'
 gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
 
@@ -91,6 +106,7 @@ gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
 # Setup Database
 #----------------------------------------------------------------------------
 if mongo == "n"
+  puts "creating the database..."
   rake 'db:create' 
 end
 
@@ -98,10 +114,9 @@ end
 # Setup Mongoid
 #----------------------------------------------------------------------------
 if mongo == "y"
-  puts "creating 'config/mongoid.yml' Mongoid configuration file..."
+  puts "setting up Mongo..."
   generate "mongoid:config"
 
-  puts "modifying 'config/application.rb' file for Mongoid..."
   gsub_file 'config/application.rb', /require 'rails\/all'/ do
     <<-RUBY
 # If you are deploying to Heroku and MongoHQ,
@@ -140,10 +155,10 @@ end
 #----------------------------------------------------------------------------
 # Set up Devise
 #----------------------------------------------------------------------------
-puts "creating 'config/initializers/devise.rb' Devise configuration file..."
+puts "setting up devise..."
+
 generate "devise:install"
 
-puts "modifying environment configuration files for Devise..."
 gsub_file 'config/initializers/devise.rb', /please-change-me@config-initializers-devise.com/, email
 gsub_file 'config/environments/development.rb', /# Don't care if the mailer can't send/, '### ActionMailer Config'
 gsub_file 'config/environments/development.rb', /config.action_mailer.raise_delivery_errors = false/ do
@@ -201,6 +216,7 @@ rake 'db:seed'
 #----------------------------------------------------------------------------
 # Set up Formtastic
 #----------------------------------------------------------------------------
+puts "setting up formtastic..."
 generate 'formtastic:install'
 #run 'rm public/stylesheets/formtastic.css'
 #run 'rm public/stylesheets/formtastic_changes.css'
@@ -208,6 +224,7 @@ generate 'formtastic:install'
 #----------------------------------------------------------------------------
 # Set up Heroku
 #----------------------------------------------------------------------------
+puts "setting serve_static_assets to true for heroku..."
 gsub_file 'config/environments/production.rb', /config.serve_static_assets = false/, "config.serve_static_assets = true"
 
 #----------------------------------------------------------------------------
@@ -220,15 +237,38 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 <head>
   <meta charset="utf-8" />
   <title>#{site_name}</title>
-  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'reset', 'grid', 'application' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
 
-<h1>#{site_name}</h1>
-
-<%= yield %>
+  <div id="header">
+    <div class="container_12">
+      <div class="grid_12">
+        <h1>#{site_name}</h1>
+      </div
+      <div class="clear"></div>
+    </div>
+  </div>
+  
+  <div id="content">
+    <div class="container_12">
+      <div class="grid_12">
+        <%= yield %>
+      </div
+      <div class="clear"></div>
+    </div>  
+  </div>
+  
+  <div id="footer">
+    <div class="container_12">
+      <div class="grid_12">
+        <p>&copy; #{Time.now.year} #{site_name}</p>
+      </div>
+      <div class="clear"></div>
+    </div>  
+  </div>
 
 </body>
 </html>
