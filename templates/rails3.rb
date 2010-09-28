@@ -12,6 +12,10 @@ email     = ask("What email would you like to send from?")
 user      = ask("What would you like to call your devise model? e.g. User")
 mongo     = ask("Use Mongo? y/n")
 
+if mongo == "n"
+  db_user = ask("What's the db username?")
+end
+
 orm               = mongo == "y" ? "mongoid" : "active_record"
 user_file_name    = user.underscore.singularize
 user_factory_file = user.underscore.pluralize
@@ -46,8 +50,6 @@ run 'curl -L http://github.com/rails/jquery-ujs/raw/master/src/rails.js > public
 # Download stylesheets
 #----------------------------------------------------------------------------
 run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/reset.css > public/stylesheets/reset.css'
-run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/960.css > public/stylesheets/960.css'
-run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/960_24_col.css > public/stylesheets/960_24_col.css'
 run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/application.css > public/stylesheets/application.css'
 
 #----------------------------------------------------------------------------
@@ -106,8 +108,9 @@ gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
 # Setup Database
 #----------------------------------------------------------------------------
 if mongo == "n"
-  puts "creating the database..."
-  rake 'db:create' 
+  # puts "creating the database..."
+  gsub_file 'config/database.yml', /username: .*/, "username: #{db_user}"
+  # rake 'db:create' 
 end
 
 #----------------------------------------------------------------------------
@@ -211,7 +214,7 @@ puts 'SETTING UP DEFAULT USER LOGIN'
 puts 'New user created: ' << #{user_file_name}.email
 FILE
 end
-rake 'db:seed'
+# rake 'db:seed'
 
 #----------------------------------------------------------------------------
 # Set up Formtastic
@@ -244,29 +247,26 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 <body>
 
   <div id="header">
-    <div class="container_12">
-      <div class="grid_12">
+    <div class="row">
+      <div class="column grid_12">
         <h1>#{site_name}</h1>
-      </div
-      <div class="clear"></div>
+      </div>
     </div>
   </div>
   
   <div id="content">
-    <div class="container_12">
-      <div class="grid_12">
+    <div class="row">
+      <div class="column grid_12">
         <%= yield %>
-      </div
-      <div class="clear"></div>
+      </div>
     </div>  
   </div>
   
   <div id="footer">
-    <div class="container_12">
-      <div class="grid_12">
+    <div class="row">
+      <div class="column grid_12">
         <p>&copy; #{Time.now.year} #{site_name}</p>
       </div>
-      <div class="clear"></div>
     </div>  
   </div>
 
@@ -286,3 +286,17 @@ end
 git :init
 git :add => '.'
 git :commit => "-m 'Initial commit of our rails app.'"
+
+puts <<-FILE
+
+Next Steps:
+
+Edit the devise model and migration to enable additional features
+
+rake db:create
+rake db:migrate
+rake db:seed
+
+Login with user@domain.com and change_me
+
+FILE
