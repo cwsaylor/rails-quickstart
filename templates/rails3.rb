@@ -240,7 +240,7 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 <head>
   <meta charset="utf-8" />
   <title>#{site_name}</title>
-  <%= stylesheet_link_tag 'reset', 'grid', 'formtastic', 'application' %>
+  <%= stylesheet_link_tag 'reset', 'formtastic', 'application' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
