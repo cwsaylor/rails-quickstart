@@ -57,19 +57,24 @@ run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets
 #----------------------------------------------------------------------------
 puts "installing gems..."
 
-gsub_file 'Gemfile', /gem \'sqlite3-ruby/, '# gem \'sqlite3-ruby'
-
 if mongo == "y"
-  gem 'mongoid', '2.0.0.beta.17'
-  gem 'bson_ext', '1.0.4'
+  gsub_file 'Gemfile', /gem \'sqlite3-ruby/, '# gem \'sqlite3-ruby'
+  gem 'mongoid', '2.0.0.beta.19'
+  gem 'bson_ext', '1.1'
 end
 
 gem 'devise', :git => 'http://github.com/plataformatec/devise.git'
 gem 'formtastic'
 gem 'factory_girl_rails'
 gem 'rails3-generators', :group => :development
+gem 'flutie'
 
 run 'bundle install'
+
+#----------------------------------------------------------------------------
+# Flutie
+#----------------------------------------------------------------------------
+rake 'flutie:install'
 
 #----------------------------------------------------------------------------
 # Tweak config/application.rb for Mongoid, Factory Girl, jQuery
@@ -240,7 +245,7 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
 <head>
   <meta charset="utf-8" />
   <title>#{site_name}</title>
-  <%= stylesheet_link_tag 'reset', 'formtastic', 'application' %>
+  <%= stylesheet_link_tag :flutie, 'application' %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
@@ -253,6 +258,14 @@ create_file 'app/views/layouts/application.html.erb' do <<-FILE
       </div>
     </div>
   </div>
+  
+  <% flash.each do |key, value| %>
+    <div class="row <%= key %>">
+      <div class="column grid_12">
+        <%= value %>
+      </div>
+    </div> <!-- <%= key %> -->
+  <% end %>
   
   <div id="content">
     <div class="row">
@@ -287,16 +300,12 @@ git :init
 git :add => '.'
 git :commit => "-m 'Initial commit of our rails app.'"
 
-puts <<-FILE
 
-Next Steps:
+puts "Next Steps:"
+puts "Edit the devise model and migration to enable additional features, then run"
+puts "rake db:create" unless mongo == "y"
+puts "rake db:migrate" unless mongo == "y"
+puts "rake db:seed"
+puts "Login with user@domain.com and change_me"
 
-Edit the devise model and migration to enable additional features
 
-rake db:create
-rake db:migrate
-rake db:seed
-
-Login with user@domain.com and change_me
-
-FILE
