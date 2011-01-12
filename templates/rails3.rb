@@ -1,311 +1,195 @@
-# Application Generator Template
-# Modifies a Rails app to use Mongoid, Devise, HTML5, Formtastic, jQuery
+# Rails 3 Application Generator Template
+# Modifies a Rails app to use optionally use Mongoid and Devise
+# Also sets up an HTML5 template with 1kb grid, Formtastic and jQuery
 
 #TODO Setup mail for heroku addon
 #TODO Generate formatastic forms for devise
 
-puts "Setting up a new Rails 3 app for Mongoid/AR, Devise, Formtastic, Factory Girl, HTML5, jQuery..."
+remote_template_path = "http://github.com/cwsaylor/rails3-quickstart/raw/master"
+local_template_path = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 
-site_name = ask("What is the name of the site?")
-domain    = ask("What domain would you like to use?")
-email     = ask("What email would you like to send from?")
-user      = ask("What would you like to call your devise model? e.g. User")
-mongo     = ask("Use Mongo? y/n")
+use_haml    = false
+use_mongoid = false
+use_devise  = false
 
-if mongo == "n"
-  db_user = ask("What's the db username?")
+
+def agnostic_copy(from_file, to_file)
+  if @template_path[0..6] == "http://"
+    run "curl -L #{@template_path}/#{from_file} > #{to_file}"
+  else
+    copy_file "#{@template_path}/#{from_file}", "#{to_file}"
+  end
 end
 
-orm               = mongo == "y" ? "mongoid" : "active_record"
-user_file_name    = user.underscore.singularize
-user_factory_file = user.underscore.pluralize
-user_model_name   = user.classify
+puts '######################################################'
+puts " Answer a few questions and we'll get you on your way."
+puts '######################################################'
 
-#----------------------------------------------------------------------------
-# Remove the usual cruft
-#----------------------------------------------------------------------------
-puts "removing unneeded files..."
+site_name = ask("Site name?")
+jquery    = ask("jQuery version?")
+puts      "Path for additional templates: remote, local, other?"
 
-if mongo == "y"
+if yes?("Remote? #{remote_template_path}")
+  @template_path = remote_template_path
+elsif yes?("Local? #{local_template_path}?")
+  @template_path = local_template_path
+else
+  @template_path = ask("Other?")
+end
+
+# This may not work since we are doing substitution!!!!!!!!!!!!!!!!!!!!!
+# See template in thor
+# http://rdoc.info/github/wycats/thor/master/Thor/Actions#template-instance_method
+
+puts '######################################################'
+puts ' Setting up Haml'
+puts '######################################################'
+
+gem 'haml-rails'
+create_file 'app/views/layouts/application.html.haml' do <<-HAML
+!!! 5
+%html{ :lang => "en"}
+  %head
+    %title
+      #{site_name}
+    %meta{ :charset => 'utf-8' }
+    %meta{ :name => 'description', :content => "" }
+    %meta{ :name => 'keywords', :content => "" }
+    = stylesheet_link_tag :flutie, 'application'
+    = javascript_include_tag :defaults
+    = csrf_meta_tag
+  %body
+    #header
+      .row
+        .column.grid_12
+          %h1
+            %a{ :href => '/', :title => "" }
+              #{site_name}
+    - flash.each do |key, value|
+      .row{ :class => key } 
+        .column.grid_12
+          = value
+    #content
+      .row
+        .column.grid_12
+          =yield
+    #footer
+      .row
+        .column.grid_12
+          %hr
+          %p
+            &copy; #{Time.now.year} #{site_name}
+HAML
+end
+
+puts '######################################################'
+puts ' Adding base gems to Gemfile'
+puts '######################################################'
+
+gem 'formtastic'
+gem 'factory_girl_rails'
+gem 'jquery-rails'
+gem 'rails3-generators', :group => :development
+gem 'flutie'
+gem 'hpricot'
+gem 'ruby_parser'
+run 'bundle install'
+
+if yes?("Use Mongoid?")
   run 'rm config/database.yml'
+  apply "#{@template_path}/templates/mongoid.rb"
+  use_mongoid = true
+else
+  db_user = ask("What's the db username?")
+  gsub_file 'config/database.yml', /username: .*/, "username: #{db_user}"
 end
+
+if yes?("Use Devise?")
+  apply "#{@template_path}/templates/devise.rb"
+  use_devise = true
+end
+
+puts '######################################################'
+puts ' Removing unused files and empty README'
+puts '######################################################'
 
 run 'rm public/index.html'
 run 'rm public/images/rails.png'
-run 'rm public/javascripts/controls.js'
-run 'rm public/javascripts/dragdrop.js'
-run 'rm public/javascripts/effects.js'
-run 'rm public/javascripts/prototype.js'
-run 'rm public/javascripts/rails.js'
-run 'rm README'
-run 'touch README'
+run 'echo "" > README'
 
-#----------------------------------------------------------------------------
-# Download jQuery and rails ujs
-#----------------------------------------------------------------------------
-run 'curl -L http://code.jquery.com/jquery-1.4.2.min.js > public/javascripts/jquery-1.4.2.min.js'
-run 'curl -L http://github.com/rails/jquery-ujs/raw/master/src/rails.js > public/javascripts/rails.js'
+puts '######################################################'
+puts ' Downloading base stylesheets'
+puts '######################################################'
 
-#----------------------------------------------------------------------------
-# Download stylesheets
-#----------------------------------------------------------------------------
-run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/reset.css > public/stylesheets/reset.css'
-run 'curl -L http://github.com/cwsaylor/rails3-quickstart/raw/master/stylesheets/application.css > public/stylesheets/application.css'
+agnostic_copy "stylesheets/reset.css",        "public/stylesheets/reset.css"
+agnostic_copy "stylesheets/application.css",  "public/stylesheets/application.css"
 
-#----------------------------------------------------------------------------
-# Add gems to Gemfile
-#----------------------------------------------------------------------------
-puts "installing gems..."
-
-if mongo == "y"
-  gsub_file 'Gemfile', /gem \'sqlite3-ruby/, '# gem \'sqlite3-ruby'
-  gem 'mongoid', '2.0.0.beta.19'
-  gem 'bson_ext', '1.1'
-end
-
-gem 'devise', :git => 'http://github.com/plataformatec/devise.git'
-gem 'formtastic'
-gem 'factory_girl_rails'
-gem 'rails3-generators', :group => :development
-gem 'flutie'
-
-run 'bundle install'
-
-#----------------------------------------------------------------------------
-# Flutie
-#----------------------------------------------------------------------------
+puts '######################################################'
+puts ' Setting up Flutie'
+puts '######################################################'
 rake 'flutie:install'
 
-#----------------------------------------------------------------------------
-# Tweak config/application.rb for Mongoid, Factory Girl, jQuery
-#----------------------------------------------------------------------------
-puts "updating config/application.rb with the orm, factory girl and jquery..."
+puts '######################################################'
+puts ' Setting up jQuery'
+puts '######################################################'
 
-gsub_file 'config/application.rb', /# Configure the default encoding used in templates for Ruby 1.9./ do
-<<-FILE
-config.generators do |g|
-      g.orm             :#{orm}
-      g.test_framework  :test_unit, :fixture_replacement => :factory_girl
-    end
-    
-    # Use jQuery for RJS
-    config.action_view.javascript_expansions[:defaults] = ['jquery-1.4.2.min', 'rails']
-    
-    # Configure the default encoding used in templates for Ruby 1.9.
-FILE
-end
+run 'rm public/javascripts/rails.js'
+generate "jquery:install --version #{jquery}"
 
-#----------------------------------------------------------------------------
-# Prevent logging of passwords
-#----------------------------------------------------------------------------
-puts "prevent logging of passwords..."
+puts '######################################################'
+puts ' Factory Girl'
+puts '######################################################'
 
-gsub_file 'config/application.rb', /:password/, ':password, :password_confirmation'
+application "  config.generators.test_framework :test_unit, :fixture_replacement => :factory_girl"
 
-#----------------------------------------------------------------------------
-# Remove fixtures
-#----------------------------------------------------------------------------
-puts "death to fixtures..."
+puts '######################################################'
+puts ' Preventing logging of password_confirmation'
+puts '######################################################'
+
+gsub_file 'config/application.rb', ':password', ':password, :password_confirmation'
+
+puts '######################################################'
+puts ' Removing fixtures'
+puts '######################################################'
+
 run 'rmdir test/fixtures'
-gsub_file 'test/test_helper.rb', /fixtures :all/, "# fixtures :all"
+gsub_file 'test/test_helper.rb', 'fixtures :all', "# fixtures :all"
 
-#----------------------------------------------------------------------------
-# Setup Database
-#----------------------------------------------------------------------------
-if mongo == "n"
-  # puts "creating the database..."
-  gsub_file 'config/database.yml', /username: .*/, "username: #{db_user}"
-  # rake 'db:create' 
-end
+puts '######################################################'
+puts ' Setting up Formtastic'
+puts '######################################################'
 
-#----------------------------------------------------------------------------
-# Setup Mongoid
-#----------------------------------------------------------------------------
-if mongo == "y"
-  puts "setting up Mongo..."
-  generate "mongoid:config"
-
-  gsub_file 'config/application.rb', /require 'rails\/all'/ do
-    <<-RUBY
-# If you are deploying to Heroku and MongoHQ,
-# you supply connection information here.
-require 'uri'
-if ENV['MONGOHQ_URL']
-  mongo_uri = URI.parse(ENV['MONGOHQ_URL'])
-  ENV['MONGOID_HOST'] = mongo_uri.host
-  ENV['MONGOID_PORT'] = mongo_uri.port.to_s
-  ENV['MONGOID_USERNAME'] = mongo_uri.user
-  ENV['MONGOID_PASSWORD'] = mongo_uri.password
-  ENV['MONGOID_DATABASE'] = mongo_uri.path.gsub('/', '')
-end
-
-require 'mongoid/railtie'
-require 'action_controller/railtie'
-require 'action_mailer/railtie'
-require 'active_resource/railtie'
-require 'rails/test_unit/railtie'
-    RUBY
-  end
-
-  gsub_file 'test/test_helper.rb', /end/ do <<-FILE
-  setup :drop_collections
-
-  private
-
-  def drop_collections
-    Mongoid.master.collections.select {|c| c.name !~ /system/ }.each(&:drop)
-  end
-end
-  FILE
-  end
-end
-
-#----------------------------------------------------------------------------
-# Set up Devise
-#----------------------------------------------------------------------------
-puts "setting up devise..."
-
-generate "devise:install"
-
-gsub_file 'config/initializers/devise.rb', /please-change-me@config-initializers-devise.com/, email
-gsub_file 'config/environments/development.rb', /# Don't care if the mailer can't send/, '### ActionMailer Config'
-gsub_file 'config/environments/development.rb', /config.action_mailer.raise_delivery_errors = false/ do
-<<-RUBY
-config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-  # A dummy setup for development - no deliveries, but logged
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = false
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default :charset => "utf-8"
-RUBY
-end
-gsub_file 'config/environments/production.rb', /config.i18n.fallbacks = true/ do
-<<-RUBY
-config.i18n.fallbacks = true
-
-  config.action_mailer.default_url_options = { :host => '#{domain}' }
-  ### ActionMailer Config
-  # Setup for production - deliveries, no errors raised
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default :charset => "utf-8"
-RUBY
-end
-
-generate :devise, user
-generate "devise:views"
-
-gsub_file "app/models/#{user_file_name}.rb", /^end$/ do
-<<-RUBY
-  attr_accessible :email, :password, :password_confirmation
-end
-RUBY
-end
-
-gsub_file "test/factories/#{user_factory_file}.rb", /^end$/ do
-<<-'RUBY'
-  f.sequence(:email) {|n| "person#{n}@example.com" }
-  f.password "testing"
-  f.password_confirmation "testing"
-end
-RUBY
-end
-
-puts "creating a default user..."
-append_file 'db/seeds.rb' do <<-FILE
-puts 'SETTING UP DEFAULT USER LOGIN'
-#{user_file_name} = #{user_model_name}.create! :email => 'user@domain.com', :password => 'change_me', :password_confirmation => 'change_me'
-puts 'New user created: ' << #{user_file_name}.email
-FILE
-end
-# rake 'db:seed'
-
-#----------------------------------------------------------------------------
-# Set up Formtastic
-#----------------------------------------------------------------------------
-puts "setting up formtastic..."
 generate 'formtastic:install'
-#run 'rm public/stylesheets/formtastic.css'
-#run 'rm public/stylesheets/formtastic_changes.css'
 
-#----------------------------------------------------------------------------
-# Set up Heroku
-#----------------------------------------------------------------------------
-puts "setting serve_static_assets to true for heroku..."
-gsub_file 'config/environments/production.rb', /config.serve_static_assets = false/, "config.serve_static_assets = true"
+if yes?("Setting up Heroku?")
+  puts '######################################################'
+  puts ' Setting up Heroku'
+  puts '######################################################'
 
-#----------------------------------------------------------------------------
-# Generate Application Layout
-#----------------------------------------------------------------------------
-run 'rm app/views/layouts/application.html.erb'
-create_file 'app/views/layouts/application.html.erb' do <<-FILE
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>#{site_name}</title>
-  <%= stylesheet_link_tag :flutie, 'application' %>
-  <%= javascript_include_tag :defaults %>
-  <%= csrf_meta_tag %>
-</head>
-<body>
-
-  <div id="header">
-    <div class="row">
-      <div class="column grid_12">
-        <h1>#{site_name}</h1>
-      </div>
-    </div>
-  </div>
-  
-  <% flash.each do |key, value| %>
-    <div class="row <%= key %>">
-      <div class="column grid_12">
-        <%= value %>
-      </div>
-    </div> <!-- <%= key %> -->
-  <% end %>
-  
-  <div id="content">
-    <div class="row">
-      <div class="column grid_12">
-        <%= yield %>
-      </div>
-    </div>  
-  </div>
-  
-  <div id="footer">
-    <div class="row">
-      <div class="column grid_12">
-        <p>&copy; #{Time.now.year} #{site_name}</p>
-      </div>
-    </div>  
-  </div>
-
-</body>
-</html>
-FILE
+  gsub_file 'config/environments/production.rb', 'config.serve_static_assets = false', 'config.serve_static_assets = true'
+  run 'heroku create'
 end
 
-#----------------------------------------------------------------------------
-# Set up git
-#----------------------------------------------------------------------------
-puts "committing to 'git'..."
-# specific to Mac OS X
+puts '######################################################'
+puts ' Setting up git'
+puts '######################################################'
+
 append_file '.gitignore' do
   '.DS_Store'
 end
+
 git :init
 git :add => '.'
 git :commit => "-m 'Initial commit of our rails app.'"
 
-
-puts "Next Steps:"
-puts "Edit the devise model and migration to enable additional features, then run"
-puts "rake db:create" unless mongo == "y"
-puts "rake db:migrate" unless mongo == "y"
-puts "rake db:seed"
-puts "Login with user@domain.com and change_me"
-
+puts '======================================================'
+puts
+puts " Edit the devise model and migration to enable"
+puts " additional features, then run:"
+puts
+puts " rake db:create" unless use_mongoid
+puts " rake db:migrate" unless use_mongoid
+puts " Login to devise with user@domain.com and change_me" if use_devise
+puts
+puts '======================================================'
 

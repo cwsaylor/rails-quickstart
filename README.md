@@ -2,9 +2,19 @@
 
 This Rails 3 template will get you up and running with Mongoid, Devise, Formtastic, Factory Girl, HTML5, jQuery and Heroku.
 
+It will also setup a basic application template with 1kb grid and flutie. 
+
+Throughout the install, you will be asked some questions to setup your app.
+
 ## Usage
 
   rails new app_name -m http://github.com/cwsaylor/rails3-quickstart/raw/master/templates/rails3.rb
+
+or if you'd rather not use MongoDB:
+
+  rails new app_name -m http://github.com/cwsaylor/rails3-quickstart/raw/master/templates/rails3.rb -d mysql
+  
+And then answer "n" to "Use Mongoid? y/n"
 
 ## Thanks
 
