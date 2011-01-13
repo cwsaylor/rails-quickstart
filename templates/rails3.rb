@@ -5,7 +5,7 @@
 #TODO Setup mail for heroku addon
 #TODO Generate formatastic forms for devise
 
-remote_template_path = "http://github.com/cwsaylor/rails3-quickstart/raw/master"
+remote_template_path = "https://github.com/cwsaylor/rails3-quickstart/raw/master"
 local_template_path = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 
 use_haml    = false
@@ -14,7 +14,7 @@ use_devise  = false
 
 
 def agnostic_copy(from_file, to_file)
-  if @template_path[0..6] == "http://"
+  if @template_path[0..6] == "http://" || @template_path[0..7] == "https://"
     run "curl -L #{@template_path}/#{from_file} > #{to_file}"
   else
     copy_file "#{@template_path}/#{from_file}", "#{to_file}"
