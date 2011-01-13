@@ -167,7 +167,7 @@ if yes?("Setting up Heroku?")
   puts '######################################################'
 
   gsub_file 'config/environments/production.rb', 'config.serve_static_assets = false', 'config.serve_static_assets = true'
-  run 'heroku create'
+  # run 'heroku create'
 end
 
 puts '######################################################'
