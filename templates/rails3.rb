@@ -127,6 +127,7 @@ agnostic_copy "stylesheets/application.css",  "public/stylesheets/application.cs
 puts '######################################################'
 puts ' Setting up Flutie'
 puts '######################################################'
+
 rake 'flutie:install'
 
 puts '######################################################'
@@ -137,16 +138,22 @@ run 'rm public/javascripts/rails.js'
 generate "jquery:install --version #{jquery}"
 
 puts '######################################################'
-puts ' Factory Girl'
+puts ' Setting up Testing Framework'
 puts '######################################################'
-
-application "  config.generators.test_framework :test_unit, :fixture_replacement => :factory_girl"
-
-puts '######################################################'
-puts ' Preventing logging of password_confirmation'
-puts '######################################################'
-
-gsub_file 'config/application.rb', ':password', ':password, :password_confirmation'
+if yes?("Setup cucumber and rspec?")
+  gem "cucumber", :group => [:development, :test]
+  gem "cucumber-rails", :group => [:development, :test]
+  gem "rspec", :group => [:development, :test]
+  gem "rspec-rails", :group => [:development, :test]
+  gem "webrat"
+  run "bundle install"
+  generate "rspec:install"
+  generate "cucumber:install", "--force", "--rspec", "--webrat"
+  run "rm -rf test/"
+  application "  config.generators.test_framework :rspec, :fixture_replacement => :factory_girl"
+else
+  application "  config.generators.test_framework :test_unit, :fixture_replacement => :factory_girl"
+end
 
 puts '######################################################'
 puts ' Removing fixtures'
@@ -154,6 +161,12 @@ puts '######################################################'
 
 run 'rmdir test/fixtures'
 gsub_file 'test/test_helper.rb', 'fixtures :all', "# fixtures :all"
+
+puts '######################################################'
+puts ' Preventing logging of password_confirmation'
+puts '######################################################'
+
+gsub_file 'config/application.rb', ':password', ':password, :password_confirmation'
 
 puts '######################################################'
 puts ' Setting up Formtastic'
