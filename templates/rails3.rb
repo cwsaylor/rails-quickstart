@@ -14,6 +14,7 @@ local_template_path = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 use_haml    = false
 use_mongoid = false
 use_devise  = false
+use_carrier = false
 
 def agnostic_copy(from_file, to_file)
   if @template_path[0..6] == "http://" || @template_path[0..7] == "https://"
@@ -29,8 +30,8 @@ puts '######################################################'
 
 site_name = ask("Site name?")
 jquery    = ask("jQuery version?")
-puts      "Path for additional templates: remote, local, other?"
 
+# puts      "Path for additional templates: remote, local, other?"
 #if yes?("Remote? #{remote_template_path}")
 #  @template_path = remote_template_path
 #elsif yes?("Local? #{local_template_path}?")
@@ -95,6 +96,7 @@ gem 'rails3-generators', :group => :development
 gem 'flutie'
 gem 'hpricot'
 gem 'ruby_parser'
+
 run 'bundle install'
 
 if yes?("Use Mongoid?")
@@ -104,6 +106,11 @@ if yes?("Use Mongoid?")
 else
   db_user = ask("What's the db username?")
   gsub_file 'config/database.yml', /username: .*/, "username: #{db_user}"
+end
+
+if yes?("Use CarrierWave?")
+  apply "#{@template_path}/templates/carrierwave.rb"
+  use_carrier = true
 end
 
 if yes?("Use Devise?")
@@ -142,27 +149,14 @@ generate "jquery:install --version #{jquery}"
 puts '######################################################'
 puts ' Setting up Testing Framework'
 puts '######################################################'
-if yes?("Setup cucumber and rspec?")
-  gem "cucumber", :group => [:development, :test]
-  gem "cucumber-rails", :group => [:development, :test]
-  gem "rspec", :group => [:development, :test]
-  gem "rspec-rails", :group => [:development, :test]
-  gem "webrat"
-  run "bundle install"
-  generate "rspec:install"
-  generate "cucumber:install", "--force", "--rspec", "--webrat"
-  run "rm -rf test/"
-  application "  config.generators.test_framework :rspec, :fixture_replacement => :factory_girl"
+
+if yes?("Setup cucumber and rspec (Warning: don't use with Mongoid)?")
+  apply "#{@template_path}/templates/rspec.rb"
 else
   application "  config.generators.test_framework :test_unit, :fixture_replacement => :factory_girl"
+  run 'rmdir test/fixtures'
+  gsub_file 'test/test_helper.rb', 'fixtures :all', "# fixtures :all"
 end
-
-puts '######################################################'
-puts ' Removing fixtures'
-puts '######################################################'
-
-run 'rmdir test/fixtures'
-gsub_file 'test/test_helper.rb', 'fixtures :all', "# fixtures :all"
 
 puts '######################################################'
 puts ' Preventing logging of password_confirmation'
@@ -204,7 +198,9 @@ puts " additional features, then run:"
 puts
 puts " rake db:create" unless use_mongoid
 puts " rake db:migrate" unless use_mongoid
+puts ' Create a default user with rake db:seed' if use_devise
 puts " Login to devise with user@domain.com and change_me" if use_devise
+puts " See https://github.com/jnicklas/carrierwave for more devise options" unless use_carrier
 puts
 puts '======================================================'
 

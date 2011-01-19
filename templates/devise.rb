@@ -63,8 +63,3 @@ puts 'New user created: ' << #{user_file_name}.email
   FILE
 end
 
-puts '======================================================'
-puts
-puts ' Create a default user with rake db:seed'
-puts
-puts '======================================================'
