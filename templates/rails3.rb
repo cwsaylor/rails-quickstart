@@ -8,10 +8,12 @@
 remote_template_path = "https://github.com/cwsaylor/rails3-quickstart/raw/master"
 local_template_path = File.expand_path(File.join(File.dirname(__FILE__), ".."))
 
+# This is a temporary hack to only use local paths since remote paths are currently broken.
+@template_path = local_template_path
+
 use_haml    = false
 use_mongoid = false
 use_devise  = false
-
 
 def agnostic_copy(from_file, to_file)
   if @template_path[0..6] == "http://" || @template_path[0..7] == "https://"
@@ -29,13 +31,13 @@ site_name = ask("Site name?")
 jquery    = ask("jQuery version?")
 puts      "Path for additional templates: remote, local, other?"
 
-if yes?("Remote? #{remote_template_path}")
-  @template_path = remote_template_path
-elsif yes?("Local? #{local_template_path}?")
-  @template_path = local_template_path
-else
-  @template_path = ask("Other?")
-end
+#if yes?("Remote? #{remote_template_path}")
+#  @template_path = remote_template_path
+#elsif yes?("Local? #{local_template_path}?")
+#  @template_path = local_template_path
+#else
+#  @template_path = ask("Other?")
+#end
 
 # This may not work since we are doing substitution!!!!!!!!!!!!!!!!!!!!!
 # See template in thor

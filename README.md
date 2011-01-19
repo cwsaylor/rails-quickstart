@@ -8,11 +8,14 @@ Throughout the install, you will be asked some questions to setup your app. Opti
 
 ## Usage
 
-  rails new app_name -m http://github.com/cwsaylor/rails3-quickstart/raw/master/templates/rails3.rb
+Using remote templates hosted on Github is currently broken. See http://support.github.com/discussions/site/2213-github-https-redirect-breaks-rails-application-generator-templates
 
-or if you'd rather not use MongoDB:
+  git clone git://github.com/cwsaylor/rails3-quickstart.git
+  rails new appname -m rails3-quickstart/raw/master/templates/rails3.rb
 
-  rails new app_name -m http://github.com/cwsaylor/rails3-quickstart/raw/master/templates/rails3.rb -d mysql
+or if you'd rather not use MongoDB, specify a database with the -d option to rails:
+
+  rails new appname -m rails3-quickstart/raw/master/templates/rails3.rb -d mysql
   
 And then answer "n" to "Use Mongoid?"
 
