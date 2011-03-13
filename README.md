@@ -11,7 +11,15 @@ This Rails 3 template will walk you through optionally setting up the following:
 * heroku
 * mongoid
 * rspec
+* cucumber with capybara or webrat
 * git
+
+## Requirements
+
+I recommend using the excellent [RVM](http://rvm.beginrescueend.com/) to manage your rubies and gems.
+
+* bundler
+* rails 3
 
 ## Usage
 
@@ -25,6 +33,28 @@ or if you'd rather not use MongoDB, specify a database with the -d option to rai
     rails new appname -m rails3-quickstart/templates/wizard.rb -d mysql
   
 And then answer "n" to "Use Mongoid?"
+
+Since we are using bundler, all commands should be prefixed with bundle exec. A shell alias will assist you with this. Add to your preferred .bashrc/.bash\_profile file.
+
+    alias be="bundle exec"
+
+## Post Install
+
+### Flutie
+
+Add to your layout:
+
+    <%= stylesheet_link_tag :flutie %>
+
+or if you're using Sass:
+
+    @import "flutie";
+
+### Devise
+
+Create a default user:
+
+    rake db:seed
 
 ## Thanks
 

@@ -9,5 +9,3 @@ run "rm public/images/rails.png"
 
 run 'echo "" > README'
 
-puts @template_path
-

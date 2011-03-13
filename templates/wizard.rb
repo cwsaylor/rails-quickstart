@@ -7,8 +7,10 @@ apply "#{@template_path}/jquery.rb"      if yes?("Use jQuery?")
 apply "#{@template_path}/haml.rb"        if yes?("Use Haml?")
 apply "#{@template_path}/carrierwave.rb" if yes?("Use CarrierWave?")
 apply "#{@template_path}/devise.rb"      if yes?("Use Devise?")
-apply "#{@template_path}/rspec.rb"       if yes?("Use Rspec & Cucumber?")
-apply "#{@template_path}/formtastic.rb"  if yes?("Setup Formtastic?")
-apply "#{@template_path}/heroku.rb"      if yes?("Set up Heroku?")
+apply "#{@template_path}/rspec.rb"       if yes?("Use Rspec?")
+apply "#{@template_path}/cucumber.rb"    if yes?("Use Cucumber?")
+apply "#{@template_path}/formtastic.rb"  if yes?("Use Formtastic?")
+apply "#{@template_path}/flutie.rb"      if yes?("Use Flutie?")
+apply "#{@template_path}/heroku.rb"      if yes?("Use Heroku?")
 apply "#{@template_path}/git.rb"
 
