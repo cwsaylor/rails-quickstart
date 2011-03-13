@@ -89,13 +89,11 @@ puts '######################################################'
 puts ' Adding base gems to Gemfile'
 puts '######################################################'
 
-gem 'formtastic'
-gem 'factory_girl_rails'
 gem 'jquery-rails'
-gem 'rails3-generators', :group => :development
+# gem 'rails3-generators', :group => :development
 gem 'flutie'
-gem 'hpricot'
-gem 'ruby_parser'
+# gem 'hpricot'
+# gem 'ruby_parser'
 
 run 'bundle install'
 
@@ -152,10 +150,6 @@ puts '######################################################'
 
 if yes?("Setup cucumber and rspec (Warning: don't use with Mongoid)?")
   apply "#{@template_path}/templates/rspec.rb"
-else
-  application "  config.generators.test_framework :test_unit, :fixture_replacement => :factory_girl"
-  run 'rmdir test/fixtures'
-  gsub_file 'test/test_helper.rb', 'fixtures :all', "# fixtures :all"
 end
 
 puts '######################################################'
@@ -164,11 +158,15 @@ puts '######################################################'
 
 gsub_file 'config/application.rb', ':password', ':password, :password_confirmation'
 
-puts '######################################################'
-puts ' Setting up Formtastic'
-puts '######################################################'
+if yes?("Setup formtastic?")
+  puts '######################################################'
+  puts ' Setting up Formtastic'
+  puts '######################################################'
 
-generate 'formtastic:install'
+  gem 'formtastic'
+  generate 'formtastic:install'
+  run "bundle install"
+end
 
 if yes?("Setting up Heroku?")
   puts '######################################################'
@@ -185,6 +183,7 @@ puts '######################################################'
 
 append_file '.gitignore' do
   '.DS_Store'
+  '.rvmrc'
 end
 
 git :init
@@ -193,14 +192,16 @@ git :commit => "-m 'Initial commit of our rails app.'"
 
 puts '======================================================'
 puts
-puts " Edit the devise model and migration to enable"
-puts " additional features, then run:"
-puts
+if use_devise
+  puts " Edit the devise model and migration to enable"
+  puts " additional features, then run:"
+  puts
+end
 puts " rake db:create" unless use_mongoid
 puts " rake db:migrate" unless use_mongoid
 puts ' Create a default user with rake db:seed' if use_devise
 puts " Login to devise with user@domain.com and change_me" if use_devise
-puts " See https://github.com/jnicklas/carrierwave for more devise options" unless use_carrier
+puts " See https://github.com/jnicklas/carrierwave for more options" if use_carrier
 puts
 puts '======================================================'
 

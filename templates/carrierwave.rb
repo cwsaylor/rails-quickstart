@@ -1,11 +1,10 @@
-puts '######################################################'
-puts ' Setting up CarrierWave'
-puts '######################################################'
+puts "Setting up CarrierWave..."
 
-gem 'carrierwave'
+gem "carrierwave"
 
-run 'bundle install'
+run "bundle install"
 
-uploader = ask("Uploader name?")
+uploader = ask("Uploader name i.e. Picture?")
+
 generate "uploader #{uploader}"
 

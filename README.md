@@ -1,21 +1,28 @@
 # Rails 3 Quickstart Template
 
-This Rails 3 template will get you up and running with Mongoid, Devise, Formtastic, Rspec, Cucumber, Factory Girl, HTML5, jQuery and Heroku.
+This Rails 3 template will walk you through optionally setting up the following:
 
-It will also setup a basic application template with 1kb grid and flutie. 
-
-Throughout the install, you will be asked some questions to setup your app. Optional installs are Mongoid, Devise, Rspec/Cucumber, and Heroku.
+* carrierwave
+* devise
+* formtastic
+* haml
+* jquery
+* flutie
+* heroku
+* mongoid
+* rspec
+* git
 
 ## Usage
 
 Using remote templates hosted on Github is currently broken. See http://support.github.com/discussions/site/2213-github-https-redirect-breaks-rails-application-generator-templates
 
     git clone git://github.com/cwsaylor/rails3-quickstart.git
-    rails new appname -m rails3-quickstart/templates/rails3.rb
+    rails new appname -m rails3-quickstart/templates/wizard.rb
 
 or if you'd rather not use MongoDB, specify a database with the -d option to rails:
 
-    rails new appname -m rails3-quickstart/templates/rails3.rb -d mysql
+    rails new appname -m rails3-quickstart/templates/wizard.rb -d mysql
   
 And then answer "n" to "Use Mongoid?"
 
