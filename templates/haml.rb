@@ -1,5 +1,7 @@
 puts "Setting up Haml..."
 
+@root_path = File.expand_path File.join(File.dirname(__FILE__), "..") if @root_path.nil?
+
 gem "haml-rails"
 
 run "bundle install"
@@ -7,7 +9,12 @@ run "bundle install"
 run "rm app/views/layouts/application.html.erb"
 
 run "mkdir -p public/stylesheets/sass"
-run "touch public/stylesheets/sass/.gitkeep"
+
+if yes?("Copy over some sass files to get you started: 1kb grid, reset, css3, rails errors?")
+  run "cp #{File.join(@root_path, 'sass', '*.*')} public/stylesheets/sass"
+else
+  touch "public/stylesheets/sass/.gitkeep"
+end
 
 append_file ".gitignore" do
   ".sass-cache"
