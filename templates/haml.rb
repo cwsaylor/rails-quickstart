@@ -35,7 +35,7 @@ create_file "app/views/layouts/application.html.haml" do <<-HAML
           Site Name  
     - flash.each do |key, value|
       %div{ :class => key } 
-          = value
+        = value
     #content
       =yield
     #footer
