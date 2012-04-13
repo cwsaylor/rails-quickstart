@@ -1,60 +1,31 @@
 # Rails 3 Quickstart Template
 
-This Rails 3 template will walk you through optionally setting up the following:
+This Rails 3 template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
 
-* carrierwave
-* devise
-* formtastic
-* haml
-* jquery
-* flutie
-* heroku
-* mongoid
-* rspec
-* cucumber with capybara or webrat
-* git
+* Heroku - Even if I move to a VPS or other hosting, I always deploy to Heroku in the beginning
+* Haml
+* Twitter Bootstrap
+* Simpleform configured for Twitter Bootstrap
+* RSpec with capybara and factory girl
+* Guard
+* Pry
+* Git
 
 ## Requirements
 
-I recommend using the excellent [RVM](http://rvm.beginrescueend.com/) to manage your rubies and gems.
-
-* bundler
-* rails 3
+* Bundler
+* Rails 3
 
 ## Usage
 
-Using remote templates hosted on Github is currently broken. See http://support.github.com/discussions/site/2213-github-https-redirect-breaks-rails-application-generator-templates
-
-    git clone git://github.com/cwsaylor/rails3-quickstart.git
-    rails new appname -m rails3-quickstart/templates/wizard.rb
-
-or if you'd rather not use MongoDB, specify a database with the -d option to rails:
-
-    rails new appname -m rails3-quickstart/templates/wizard.rb -d mysql
+    rails new appname -m https://github.com/cwsaylor/rails3-quickstart/rails3-quickstart/base.rb
   
-And then answer "n" to "Use Mongoid?"
+## Post Install Notes
 
-Since we are using bundler, all commands should be prefixed with bundle exec. A shell alias will assist you with this. Add to your preferred .bashrc/.bash\_profile file.
-
-    alias be="bundle exec"
-
-## Post Install
-
-### Flutie
-
-Add to your layout:
-
-    <%= stylesheet_link_tag :flutie %>
-
-or if you're using Sass:
-
-    @import "flutie";
-
-### Devise
-
-Create a default user:
-
-    rake db:seed
+* Run `rails g bootstrap:layout application fluid` to replace the fixed width application template with a fluid version
+* After generating a scaffold, run `rails generate bootstrap:themed CONTROLLER_PATH` to apply bootstap theming to the scaffold
+* Run `guard` to watch for changes to specs
+* Rails console now launches Pry instead of IRB
 
 ## Thanks
 
