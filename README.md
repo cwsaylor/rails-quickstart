@@ -15,10 +15,11 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 
 * Bundler
 * Rails 3
+* `gem install rb-fsevent` on Mac OS X for Guard
 
 ## Usage
 
-    rails new appname -m https://github.com/cwsaylor/rails3-quickstart/rails3-quickstart/base.rb
+    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/base.rb
   
 ## Post Install Notes
 

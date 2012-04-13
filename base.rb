@@ -39,6 +39,3 @@ git :init
 git :add => "."
 git :commit => "-m 'Initial commit.'"
 
-puts "-----------------------------------------------"
-puts "You should run `gem install rb-fsevent`"
-puts "-----------------------------------------------"
