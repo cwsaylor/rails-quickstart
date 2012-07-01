@@ -35,5 +35,5 @@ end
 
 git :init
 git :add => "."
-git :commit => "-m 'Initial commit.'"
+git :commit => "-m 'Setup base Rails app with Haml, Rspec, Factory Girl, Capybara, Guard and Pry.'"
 
