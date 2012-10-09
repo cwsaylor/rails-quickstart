@@ -2,31 +2,33 @@
 
 This Rails 3 template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
 
+* Devise (optional)
+* ActiveAdmin (optional)
+* Zurb Foundation and Compass
 * Heroku - Even if I move to a VPS or other hosting, I always deploy to Heroku in the beginning
-* Haml
-* Twitter Bootstrap
-* Simpleform configured for Twitter Bootstrap
-* RSpec with capybara and factory girl
+* Slim
+* RSpec with Capybara and Factory Girl
 * Guard
 * Pry
-* Git
 
 ## Requirements
 
+* Ruby 1.9.3
 * Bundler
 * Rails 3
+* Git
 * `gem install rb-fsevent` on Mac OS X for Guard
 
 ## Usage
 
-    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/base.rb
-  
+    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/template.rb
+
 ## Post Install Notes
 
-* Run `rails g bootstrap:layout application fluid` to replace the fixed width application template with a fluid version
-* After generating a scaffold, run `rails generate bootstrap:themed CONTROLLER_PATH` to apply bootstap theming to the scaffold
+* Run `heroku create` to create an application on heroku. Assumes you have an account setup.
+* Run `heroku labs:enable user-env-compile`
 * Run `guard` to watch for changes to specs
-* Rails console now launches Pry instead of IRB
+* Create a root route in config/routes.rb: `root :to => "home#index"`
 
 ## Thanks
 
