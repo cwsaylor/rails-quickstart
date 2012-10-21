@@ -1,4 +1,8 @@
+pg_user = ask("PostgreSQL user name")
 run 'cp config/database.yml config/database.yml.example'
+gsub_file "config/database.yml", /username: .*$/, "username: #{pg_user}"
+run 'rake db:create'
+
 remove_file 'public/index.html'
 remove_file 'app/views/layouts/application.html.erb'
 remove_file 'app/assets/images/rails.png'
