@@ -9,10 +9,11 @@ remove_file 'README'
 create_file 'README.md'
 
 gem 'slim-rails'
+gem 'simple_form'
+gem 'newrelic_rpm'
 
 if yes?('ActiveAdmin')
   gem 'activeadmin'
-  #gem "meta_search",    '>= 1.1.0.pre'
   active_admin = true
 end
 
@@ -55,6 +56,7 @@ generate "devise:install" if devise
 generate "devise user" if devise
 generate "devise:views" if devise
 generate "active_admin:install" if active_admin
+generate "simple_form:install --bootstrap"
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
   "require 'capybara/rspec'\n"
@@ -89,6 +91,16 @@ inject_into_file 'config/environments/production.rb', :after => "# config.active
 
   # TODO Change default host
   config.action_mailer.default_url_options = { :host => 'changeme.com' }
+
+  ActionMailer::Base.smtp_settings = {
+  :address        => 'smtp.sendgrid.net',
+  :port           => '587',
+  :authentication => :plain,
+  :user_name      => ENV['SENDGRID_USERNAME'],
+  :password       => ENV['SENDGRID_PASSWORD'],
+  :domain         => 'dailyarchyve.com'
+  }
+  ActionMailer::Base.delivery_method ||= :smtp
 eos
 end
 
