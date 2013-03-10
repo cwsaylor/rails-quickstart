@@ -93,12 +93,12 @@ inject_into_file 'config/environments/production.rb', :after => "# config.active
   config.action_mailer.default_url_options = { :host => 'changeme.com' }
 
   ActionMailer::Base.smtp_settings = {
-  :address        => 'smtp.sendgrid.net',
-  :port           => '587',
-  :authentication => :plain,
-  :user_name      => ENV['SENDGRID_USERNAME'],
-  :password       => ENV['SENDGRID_PASSWORD'],
-  :domain         => 'dailyarchyve.com'
+    :address        => 'smtp.sendgrid.net',
+    :port           => '587',
+    :authentication => :plain,
+    :user_name      => ENV['SENDGRID_USERNAME'],
+    :password       => ENV['SENDGRID_PASSWORD'],
+    :domain         => 'changeme.com'
   }
   ActionMailer::Base.delivery_method ||= :smtp
 eos
@@ -149,6 +149,7 @@ if devise
   gsub_file migration_file, "# t.datetime", "t.datetime"
   gsub_file migration_file, "# t.integer",  "t.integer"
   gsub_file migration_file, "# add_index",  "add_index"
+  gsub_file "app/models/user.rb", "validatable",   "validatable, :confirmable"
 end
 
 run 'rake db:migrate'
@@ -170,7 +171,12 @@ git :commit => "-m 'Setup base Rails app for Heroku with Devise, Slim, #{'Active
 
 puts "######################################"
 puts "heroku create"
+puts "git push heroku master"
 puts "heroku addons:add sendgrid:starter"
 puts "heroku addons:add newrelic:standard"
+puts "heroku run rake db:migrate"
+puts "heroku restart"
+puts "heroku addons:open sendgrid"
+puts "heroku addons:open newrelic"
 puts "######################################"
 
