@@ -167,7 +167,7 @@ run "curl https://raw.github.com/gist/2253296/newrelic.yml > config/newrelic.yml
 
 git :init
 git :add => "."
-git :commit => "-m 'Setup base Rails app for Heroku with Devise, Slim, #{'ActiveAdmin, ' if active_admin}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
+git :commit => "-m 'Setup base Rails app for Heroku with Sendgrid, New Relic, Devise, Slim, #{'ActiveAdmin, ' if active_admin}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
 
 puts "######################################"
 puts "heroku create"
