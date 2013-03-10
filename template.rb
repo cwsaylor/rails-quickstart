@@ -162,7 +162,15 @@ generate "controller pages index --no-helper --no-assets"
 gsub_file "config/routes.rb", "# root :to => 'welcome#index'", "root :to => 'pages#index'"
 gsub_file "config/routes.rb", "  get \"pages/index\"\n", ""
 
+run "curl https://raw.github.com/gist/2253296/newrelic.yml > config/newrelic.yml"
+
 git :init
 git :add => "."
 git :commit => "-m 'Setup base Rails app for Heroku with Devise, Slim, #{'ActiveAdmin, ' if active_admin}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
+
+puts "######################################"
+puts "heroku create"
+puts "heroku addons:add sendgrid:starter"
+puts "heroku addons:add newrelic:standard"
+puts "######################################"
 
