@@ -2,10 +2,12 @@
 
 This Rails 3 template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
 
+* Postgresql
+* Simple Form
 * Devise (optional)
 * ActiveAdmin (optional)
-* Zurb Foundation and Compass
-* Heroku - Even if I move to a VPS or other hosting, I always deploy to Heroku in the beginning
+* Twitter Bootstrap
+* Heroku, with configs for Sendgrid and New Relic
 * Slim
 * RSpec with Capybara and Factory Girl
 * Guard
@@ -17,18 +19,24 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 * Bundler
 * Rails 3
 * Git
-* `gem install rb-fsevent` on Mac OS X for Guard
 
 ## Usage
 
-    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/template.rb
+    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/template.rb -d postgresql --skip-test-unit
 
 ## Post Install Notes
 
-* Run `heroku create` to create an application on heroku. Assumes you have an account setup.
-* Run `heroku labs:enable user-env-compile`
-* Run `guard` to watch for changes to specs
-* Create a root route in config/routes.rb: `root :to => "home#index"`
+    heroku labs:enable user-env-compile
+    heroku create
+    git push heroku master
+    heroku run rake db:migrate
+    heroku restart
+    heroku addons:add sendgrid:starter
+    heroku addons:add newrelic:standard
+    heroku addons:open sendgrid
+    heroku addons:open newrelic
+
+  Run `guard` to watch for changes to specs
 
 ## Thanks
 
