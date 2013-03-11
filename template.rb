@@ -22,6 +22,10 @@ if yes?('Devise')
   devise = true
 end
 
+inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
+  'ruby "1.9.3"'
+end
+
 inject_into_file 'Gemfile', :after => /gem 'uglifier'.*'\n/ do
 <<eos
   gem 'therubyracer'
