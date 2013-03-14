@@ -7,7 +7,7 @@ remove_file 'app/views/layouts/application.html.erb'
 remove_file 'app/assets/images/rails.png'
 remove_file 'README'
 create_file 'Procfile' do
-  "web: `bundle exec rails server -p $PORT`"
+  "web: bundle exec rails server -p $PORT"
 end
 
 gem 'slim-rails'
