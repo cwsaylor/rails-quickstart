@@ -7,13 +7,14 @@ remove_file 'app/views/layouts/application.html.erb'
 remove_file 'app/assets/images/rails.png'
 remove_file 'README'
 create_file 'Procfile' do
-  "web: bundle exec rails server -p $PORT"
+  "web: bundle exec thin start -p $PORT"
 end
 
 gem 'slim-rails'
 gem 'simple_form'
 gem 'newrelic_rpm'
 gem 'foreman'
+gem 'thin'
 
 if yes?('ActiveAdmin')
   gem 'activeadmin'
@@ -183,7 +184,7 @@ run "curl https://raw.github.com/gist/2253296/newrelic.yml > config/newrelic.yml
 
 git :init
 git :add => "."
-git :commit => "-m 'Setup base Rails app for Heroku with Foreman, Sendgrid, New Relic, Devise, Slim, #{'ActiveAdmin, ' if active_admin}#{'Delayed Job, ' if dj}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
+git :commit => "-m 'Setup base Rails app for Heroku with #{'ActiveAdmin, ' if active_admin}#{'Delayed Job, ' if dj}Capybara, #{'Devise, ' if devise}FactoryGirl, Foreman, Guard, New Relic, Rspec, Sendgrid, Slim, Thin, Twitter Bootstrap.'"
 
 puts "######################################"
 puts "heroku create"
