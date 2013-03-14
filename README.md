@@ -6,7 +6,7 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 * Simple Form
 * Devise (optional)
 * ActiveAdmin (optional)
-* Delayed Job (optional)
+* Delayed Job w/ Hirefire.io support (optional)
 * Twitter Bootstrap
 * Heroku, with configs for Sendgrid and New Relic
 * Slim
@@ -41,6 +41,8 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 If you setup delayed job, you'll want to add some workers
 
     heroku ps:scale worker=1
+
+You'll also want to setup an account at http://hirefire.io and add your application.
 
   Run `guard` to watch for changes to specs
   Run `foreman` to start your server and workers

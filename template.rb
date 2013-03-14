@@ -28,6 +28,7 @@ end
 
 if yes?('Delayed Job')
   gem 'delayed_job_active_record'
+  gem 'hirefireapp'
   append_file "Procfile" do
     'worker: bundle exec rake jobs:work'
   end
