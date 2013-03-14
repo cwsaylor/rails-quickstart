@@ -12,6 +12,7 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 * RSpec with Capybara and Factory Girl
 * Guard
 * Pry
+* Foreman
 
 ## Requirements
 
@@ -37,6 +38,7 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
     heroku addons:open newrelic
 
   Run `guard` to watch for changes to specs
+  Run `foreman` to start your server
 
 ## Thanks
 
