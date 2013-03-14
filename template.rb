@@ -25,6 +25,14 @@ if yes?('Devise')
   devise = true
 end
 
+if yes?('Delayed Job')
+  gem 'delayed_job_active_record'
+  append_file "Procfile" do
+    'worker: bundle exec rake jobs:work'
+  end
+  dj = true
+end
+
 inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
   'ruby "1.9.3"'
 end
@@ -64,6 +72,7 @@ generate "devise user" if devise
 generate "devise:views" if devise
 generate "active_admin:install" if active_admin
 generate "simple_form:install --bootstrap"
+generate "delayed_job:active_record" if dj
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
   "require 'capybara/rspec'\n"
@@ -174,7 +183,7 @@ run "curl https://raw.github.com/gist/2253296/newrelic.yml > config/newrelic.yml
 
 git :init
 git :add => "."
-git :commit => "-m 'Setup base Rails app for Heroku with Foreman, Sendgrid, New Relic, Devise, Slim, #{'ActiveAdmin, ' if active_admin}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
+git :commit => "-m 'Setup base Rails app for Heroku with Foreman, Sendgrid, New Relic, Devise, Slim, #{'ActiveAdmin, ' if active_admin}#{'Delayed Job, ' if dj}Rspec, Capybara, FactoryGirl, Guard and Twitter Bootstrap.'"
 
 puts "######################################"
 puts "heroku create"
@@ -185,5 +194,6 @@ puts "heroku run rake db:migrate"
 puts "heroku restart"
 puts "heroku addons:open sendgrid"
 puts "heroku addons:open newrelic"
+puts "heroku ps:scale worker=1" if dj
 puts "######################################"
 
