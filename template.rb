@@ -10,6 +10,22 @@ create_file 'Procfile' do
   "web: bundle exec thin start -p $PORT"
 end
 
+gem_group :development do
+  gem 'pry-rails'
+  gem 'debugger'
+  gem 'rb-fsevent', '~> 0.9'
+end
+
+gem_group :test do
+  gem 'factory_girl_rails'
+  gem 'capybara'
+  gem 'guard-rspec'
+end
+
+gem_group :test, :development do
+  gem 'rspec-rails'
+end
+
 gem 'slim-rails'
 gem 'simple_form'
 gem 'newrelic_rpm'
@@ -45,22 +61,6 @@ inject_into_file 'Gemfile', :after => /gem 'uglifier'.*'\n/ do
   gem 'less-rails'
   gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 eos
-end
-
-gem_group :development do
-  gem 'pry-rails'
-  gem 'debugger'
-  gem 'rb-fsevent', '~> 0.9'
-end
-
-gem_group :test do
-  gem 'factory_girl_rails'
-  gem 'capybara'
-  gem 'guard-rspec'
-end
-
-gem_group :test, :development do
-  gem 'rspec-rails'
 end
 
 run "bundle install"
