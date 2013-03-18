@@ -66,14 +66,14 @@ end
 run "bundle install"
 run 'rake db:create'
 
+generate "rspec:install"
 generate "bootstrap:install less"
 generate "bootstrap:layout application fixed"
-generate "rspec:install"
+generate "simple_form:install --bootstrap"
 generate "devise:install" if devise
 generate "devise user" if devise
 generate "devise:views" if devise
 generate "active_admin:install" if active_admin
-generate "simple_form:install --bootstrap"
 generate "delayed_job:active_record" if dj
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
