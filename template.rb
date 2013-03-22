@@ -10,6 +10,8 @@ create_file 'Procfile' do
   "web: bundle exec thin start -p $PORT"
 end
 
+create_file 'env.example'
+
 gem_group :development do
   gem 'pry-rails'
   gem 'debugger'
@@ -175,6 +177,7 @@ run 'rake db:migrate'
 append_file '.gitignore' do
   '.DS_Store'
   'config/database.yml'
+  '.env'
 end
 
 generate "controller pages index --no-helper --no-assets"
