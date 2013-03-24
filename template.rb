@@ -12,6 +12,11 @@ end
 
 create_file 'env.example'
 
+create_file '.slugignore' do
+  "/spec"
+  "/doc"
+end
+
 gem_group :development do
   gem 'pry-rails'
   gem 'debugger'
