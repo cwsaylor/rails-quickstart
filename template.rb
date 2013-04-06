@@ -167,6 +167,8 @@ end
 
 run 'bundle exec guard init rspec'
 
+gsub_file "Guardfile", "guard 'rspec' do", 'guard "rspec", :all_after_pass => false, :all_on_start => false, :cli => "--color --format nested --drb" do'
+
 if devise
   migration_file = Dir['db/migrate/*_devise_create_users.rb'].first
   puts migration_file
