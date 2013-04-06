@@ -17,8 +17,10 @@ end
 create_file 'env.example'
 
 create_file '.slugignore' do
-  "/spec"
-  "/doc"
+  <<-EOS
+/spec
+/doc
+  EOS
 end
 
 gem_group :development do
@@ -67,11 +69,11 @@ inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
 end
 
 inject_into_file 'Gemfile', :after => /gem 'uglifier'.*'\n/ do
-<<eos
+  <<-EOS
   gem 'therubyracer'
   gem 'less-rails'
   gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
-eos
+  EOS
 end
 
 run "bundle install"
@@ -81,10 +83,10 @@ generate "rspec:install"
 generate "bootstrap:install less"
 generate "bootstrap:layout application fixed"
 generate "simple_form:install --bootstrap"
-generate "devise:install" if devise
-generate "devise user" if devise
-generate "devise:views" if devise
-generate "active_admin:install" if active_admin
+generate "devise:install"            if devise
+generate "devise user"               if devise
+generate "devise:views"              if devise
+generate "active_admin:install"      if active_admin
 generate "delayed_job:active_record" if dj
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
@@ -95,32 +97,30 @@ inject_into_file 'spec/spec_helper.rb', :after => "RSpec.configure do |config|\n
   "  config.include FactoryGirl::Syntax::Methods\n\n"
 end
 
-inject_into_file 'config/application.rb', :after => "config.assets.version = '1.0'\n" do
-<<eos
-    config.assets.initialize_on_precompile = false
-eos
+inject_into_file 'config/application.rb', :after => "# config.autoload_paths += %W(\#{config.root}/extras)\n" do
+  "    config.autoload_paths += %W(\#{config.root}/lib)\n"
 end
 
 if active_admin
-  gsub_file 'config/application.rb', "config.assets.precompile += %w[active_admin.css active_admin.js]", "config.assets.precompile += %w[active_admin.css active_admin.js active_admin/print.css]"
+  inject_into_file 'config/application.rb', :after => "config.assets.version = '1.0'\n" do
+    "\n    config.assets.precompile += %w[active_admin.css active_admin.js active_admin/print.css]\n"
+  end
+end
+
+inject_into_file 'config/application.rb', :after => "config.assets.version = '1.0'\n" do
+  "\n    config.assets.initialize_on_precompile = false\n"
 end
 
 inject_into_file 'config/environments/development.rb', :after => "config.assets.debug = true\n" do
-<<eos
-
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-eos
+  "\n  config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
 end
 
 inject_into_file 'config/environments/test.rb', :after => "config.active_support.deprecation = :stderr\n" do
-<<eos
-
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-eos
+  "\n  config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
 end
 
 inject_into_file 'config/environments/production.rb', :after => "# config.active_record.auto_explain_threshold_in_seconds = 0.5\n" do
-<<eos
+  <<-EOS
 
   # TODO Change default host
   config.action_mailer.default_url_options = { :host => 'changeme.com' }
@@ -134,22 +134,22 @@ inject_into_file 'config/environments/production.rb', :after => "# config.active
     :domain         => 'changeme.com'
   }
   ActionMailer::Base.delivery_method ||= :smtp
-eos
+  EOS
 end
 
 inject_into_file 'app/assets/stylesheets/bootstrap_and_overrides.css.less', :after => "@import \"twitter/bootstrap/bootstrap\";\n" do
-<<eos
+  <<-EOS
 @media (min-width: 980px) {
   body {
     padding-top: 60px;
     padding-bottom: 42px;
   }
 }
-eos
+  EOS
 end
 
 inject_into_file 'app/helpers/application_helper.rb', :after => "module ApplicationHelper\n" do
-<<'eos'
+  <<-'EOS'
   ALERT_TYPES = [:error, :info, :success, :warning]
 
   def bootstrap_flash
@@ -170,7 +170,7 @@ inject_into_file 'app/helpers/application_helper.rb', :after => "module Applicat
     end
     flash_messages.join("\n").html_safe
   end
-eos
+  EOS
 end
 
 run 'bundle exec guard init rspec'
@@ -178,6 +178,14 @@ run 'bundle exec guard init rspec'
 gsub_file "Guardfile", "guard 'rspec' do", 'guard "rspec", :all_after_pass => false, :all_on_start => false, :cli => "--color --format nested --drb" do'
 
 if devise
+  create_file "spec/support/devise.rb" do
+    <<-EOS
+RSpec.configure do |config|
+  config.include Devise::TestHelpers, :type => :controller
+end
+    EOS
+  end
+
   migration_file = Dir['db/migrate/*_devise_create_users.rb'].first
   puts migration_file
   gsub_file migration_file, "# t.string",   "t.string"
@@ -190,9 +198,11 @@ end
 run 'rake db:migrate'
 
 append_file '.gitignore' do
-  '.DS_Store'
-  'config/database.yml'
-  '.env'
+  <<-EOS
+.DS_Store
+config/database.yml
+.env
+  EOS
 end
 
 generate "controller pages index --no-helper --no-assets"
