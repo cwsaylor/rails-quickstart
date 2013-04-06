@@ -97,6 +97,10 @@ inject_into_file 'config/application.rb', :after => "config.assets.version = '1.
 eos
 end
 
+if active_admin
+  gsub_file 'config/application.rb', "config.assets.precompile += %w[active_admin.css active_admin.js]", "config.assets.precompile += %w[active_admin.css active_admin.js active_admin/print.css]"
+end
+
 inject_into_file 'config/environments/development.rb', :after => "config.assets.debug = true\n" do
 <<eos
 
