@@ -44,6 +44,8 @@ gem 'simple_form'
 gem 'newrelic_rpm'
 gem 'foreman'
 gem 'thin'
+gem 'libv8', '~> 3.11.8'
+gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
 if yes?('ActiveAdmin')
   gem 'activeadmin'
@@ -70,9 +72,8 @@ end
 
 inject_into_file 'Gemfile', :after => /gem 'uglifier'.*'\n/ do
   <<-EOS
-  gem 'therubyracer'
+  gem 'therubyracer', :platforms => :ruby
   gem 'less-rails'
-  gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
   EOS
 end
 
