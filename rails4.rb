@@ -94,10 +94,10 @@ generate "rspec:install"
 generate "foundation:install"
 generate "foundation:layout application --slim"
 generate "simple_form:install --foundation"
+generate "active_admin:install"      if active_admin
 generate "devise:install"            if devise
 generate "devise user"               if devise
 generate "devise:views"              if devise
-generate "active_admin:install"      if active_admin
 generate "delayed_job:active_record" if dj
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
