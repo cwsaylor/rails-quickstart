@@ -1,13 +1,14 @@
-# Rails 3 Quickstart Template
+# Rails Quickstart Template
 
-This Rails 3 template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
+This Rails template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
 
 * Postgresql
 * Simple Form
 * Devise (optional)
 * ActiveAdmin (optional)
 * Delayed Job w/ Hirefire.io support (optional)
-* Twitter Bootstrap
+* Zurb Foundation (Rails 4)
+* Twitter Bootstrap (Rails 3)
 * Heroku, with configs for Sendgrid and New Relic
 * Slim
 * RSpec with Capybara and Factory Girl
@@ -22,9 +23,13 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
 * Rails 3
 * Git
 
-## Usage
+## Rails 3 Usage
 
-    rails new appname -m https://raw.github.com/cwsaylor/rails3-quickstart/master/template.rb -d postgresql --skip-test-unit
+    rails new appname -m https://raw.github.com/cwsaylor/rails-quickstart/master/rails3.rb -d postgresql --skip-test-unit
+
+## Rails 4 Usage
+
+    rails new appname -m https://raw.github.com/cwsaylor/rails-quickstart/master/rails4.rb -d postgresql --skip-test-unit
 
 ## Post Install Notes
 
@@ -35,6 +40,7 @@ This Rails 3 template brings a base rails app up to the bare minimum I use for s
     heroku restart
     heroku addons:add sendgrid:starter
     heroku addons:add newrelic:standard
+    heroku config:set NEW_RELIC_APP_NAME=foo
     heroku addons:open sendgrid
     heroku addons:open newrelic
 
