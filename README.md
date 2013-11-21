@@ -14,6 +14,7 @@ This Rails template brings a base rails app up to the bare minimum I use for sta
 * RSpec with Capybara and Factory Girl
 * Guard
 * Pry
+* Remote Pry debugger
 * Foreman
 
 ## Requirements
@@ -33,25 +34,33 @@ This Rails template brings a base rails app up to the bare minimum I use for sta
 
 ## Post Install Notes
 
-    heroku labs:enable user-env-compile
+Login to /admin with admin@example.com and password. You'll want to change this.
+
     heroku create
     git push heroku master
     heroku run rake db:migrate
     heroku restart
+    heroku addons:add zerigo_dns:basic
     heroku addons:add sendgrid:starter
     heroku addons:add newrelic:standard
-    heroku config:set NEW_RELIC_APP_NAME=foo
+    heroku config:set NEW_RELIC_APP_NAME=appname
     heroku addons:open sendgrid
     heroku addons:open newrelic
+    heroku addons:open zerigo_dns
 
-If you setup delayed job, you'll want to add some workers
+Delete A record entries and setup a redirect form domain.com to www.domain.com
+Change CNAME to appname.herokuapp.com
+
+If you setup delayed job, add some workers
 
     heroku ps:scale worker=1
 
-You'll also want to setup an account at http://hirefire.io and add your application.
+Setup an account at http://hirefire.io and add your application.
 
   Run `guard` to watch for changes to specs
   Run `foreman` to start your server and workers
+
+See https://github.com/nixme/pry-debugger for remote pry debugging
 
 ## Thanks
 
