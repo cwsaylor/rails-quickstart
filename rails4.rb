@@ -1,6 +1,4 @@
-pg_user = ask("PostgreSQL user name")
-run 'cp config/database.yml config/database.yml.example'
-gsub_file "config/database.yml", /username: .*$/, "username: #{pg_user}"
+gsub_file "config/database.yml", /username: .*$/, "username: <%= $USER %>"
 
 inject_into_file "config/database.yml", :before => "  adapter: postgresql" do
   "  min_messages: WARNING\n"
