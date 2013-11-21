@@ -10,7 +10,7 @@ create_file 'Procfile' do
   "web: bundle exec thin start -p $PORT"
 end
 
-create_file 'env.example' do
+create_file '.env' do
   <<-EOS
 #AWS_BUCKET=
 #AWS_ACCESS_KEY_ID=
@@ -26,26 +26,32 @@ create_file '.slugignore' do
 end
 
 gem_group :development do
-  gem 'pry-rails'
   gem 'rb-fsevent'
+  gem 'guard-rspec'
 end
 
 gem_group :test do
-  gem 'capybara'
+  gem 'capybara-webkit'
   gem 'factory_girl_rails'
-  gem 'guard-rspec'
 end
 
 gem_group :test, :development do
   gem 'debugger'
   gem 'rspec-rails'
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
+  gem 'pry-debugger'
 end
 
-gsub_file "Gemfile", "# gem 'therubyracer', platforms: :ruby", "gem 'therubyracer', platforms: :ruby"
+gem_group :production do
+  gem 'rails_12factor'
+end
 
 gem 'compass'
 gem 'foreman'
-gem 'libv8'
+gem 'newrelic_rpm'
 gem 'simple_form'
 gem 'slim-rails'
 gem 'thin'
@@ -92,14 +98,24 @@ generate "rspec:install"
 generate "foundation:install"
 generate "foundation:layout application --slim"
 generate "simple_form:install --foundation"
-generate "active_admin:install"      if active_admin
-generate "devise:install"            if devise
-generate "devise user"               if devise
-generate "devise:views"              if devise
+generate "active_admin:install" if active_admin
 generate "delayed_job:active_record" if dj
+
+if devise
+  generate "devise:install"
+  generate "devise user"
+  generate "devise:views"
+end
+
 
 inject_into_file 'spec/spec_helper.rb', :after => "require 'rspec/autorun'\n" do
   "require 'capybara/rspec'\n"
+end
+
+create_file "spec/support/capybara_webkit.rb" do
+  <<-EOS
+Capybara.javascript_driver = :webkit
+  EOS
 end
 
 inject_into_file 'spec/spec_helper.rb', :after => "RSpec.configure do |config|\n" do
@@ -114,10 +130,6 @@ if active_admin
   inject_into_file 'config/application.rb', :after => "# config.i18n.default_locale = :de\n" do
     "\n    config.assets.precompile += %w[active_admin.css active_admin.js active_admin/print.css]\n"
   end
-end
-
-inject_into_file 'config/application.rb', :after => "# config.i18n.default_locale = :de\n" do
-  "\n    config.assets.initialize_on_precompile = false\n"
 end
 
 inject_into_file 'config/environments/development.rb', :before => /^end$/ do
@@ -173,11 +185,12 @@ run 'rake db:migrate'
 append_file '.gitignore' do
   <<-EOS
 .DS_Store
-config/database.yml
 .env
   EOS
 end
 
+generate "active_admin:resource User" if active_admin && devise
+generate 'active_admin:resource "Delayed::Job"' if active_admin && dj
 generate "controller pages index --no-helper --no-assets"
 
 inject_into_file 'config/routes.rb', :after => "routes.draw do\n" do
@@ -185,21 +198,28 @@ inject_into_file 'config/routes.rb', :after => "routes.draw do\n" do
 end
 
 run "curl https://gist.github.com/rwdaigle/2253296/raw/newrelic.yml > config/newrelic.yml"
+run "curl https://gist.github.com/cwsaylor/7573954/raw/dashboard.rb > app/admin/dashboard.rb"
+run "curl https://gist.github.com/cwsaylor/7573954/raw/delayed_job.rb > app/admin/delayed_job.rb"
 
 git :init
 git :add => "."
 git :commit => "-m 'Setup base Rails app for Heroku with #{'ActiveAdmin, ' if active_admin}#{'Delayed Job, ' if dj}Capybara, #{'Devise, ' if devise}FactoryGirl, Foreman, Guard, New Relic, Rspec, Sendgrid, Slim, Thin, Zurb Foundation.'"
 
-puts "######################################"
+puts "################################################################################"
+puts "# Login to /admin with admin@example.com and password" if active_admin
 puts "heroku create"
 puts "git push heroku master"
+puts "heroku addons:add zerigo_dns:basic"
 puts "heroku addons:add sendgrid:starter"
-puts "heroku addons:add newrelic:standard"
-puts "heroku config:set NEW_RELIC_APP_NAME=foo"
+puts "heroku addons:add newrelic:stark"
+puts "heroku config:set NEW_RELIC_APP_NAME=appname"
 puts "heroku run rake db:migrate"
 puts "heroku restart"
 puts "heroku addons:open sendgrid"
 puts "heroku addons:open newrelic"
+puts "heroku addons:open zerigo_dns"
+puts "# Delete A record entries and setup a redirect form domain.com to www.domain.com"
+puts "# Change CNAME to appname.herokuapp.com"
 puts "heroku ps:scale worker=1" if dj
-puts "######################################"
+puts "################################################################################"
 
