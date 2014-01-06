@@ -123,7 +123,9 @@ inject_into_file 'spec/spec_helper.rb', :after => "RSpec.configure do |config|\n
 end
 
 inject_into_file 'config/application.rb', :after => "# config.i18n.default_locale = :de\n" do
-  "\n    config.autoload_paths += %W(\#{config.root}/lib)\n"
+  "\n"
+  "    config.autoload_paths += %W(\#{config.root}/lib)\n"
+  "    I18n.config.enforce_available_locales = true\n"
 end
 
 if active_admin
