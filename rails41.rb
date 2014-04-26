@@ -13,8 +13,7 @@ inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
   "ruby '2.1.1'\n"
 end
 
-gsub_file "Gemfile", "gem 'turbolinks'", "#gem 'turbolinks'"
-gsub_file "app/assets/javascripts/application.js", "//= require turbolinks\n", ""
+append_file "app/assets/javascripts/application.js", "//= require bootstrap"
 
 run "bundle install"
 run "rake db:create"
