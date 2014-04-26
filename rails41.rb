@@ -3,9 +3,12 @@ gem_group :test, :development do
 end
 
 gem_group :production do
+  gem 'newrelic_rpm'
   gem 'rails_12factor'
+  gem 'unicorn'
 end
 
+gem 'foreman'
 gem 'slim-rails'
 gem 'bootstrap-sass'
 
@@ -16,48 +19,93 @@ end
 append_file "app/assets/javascripts/application.js", "//= require bootstrap"
 
 run "bundle install"
-run "rake db:create"
-run 'rake db:migrate'
+run "bundle exec rake db:create"
+run "bundle exec rake db:migrate"
 
-remove_file 'app/views/layouts/application.html.erb'
-remove_file 'app/assets/stylesheets/application.css'
+remove_file "app/views/layouts/application.html.erb"
+remove_file "app/assets/stylesheets/application.css"
 
 run "curl https://gist.githubusercontent.com/cwsaylor/11094449/raw/application.html.slim > app/views/layouts/application.html.slim"
+run "curl https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml > config/newrelic.yml"
 
-create_file 'app/assets/stylesheets/application.css.scss' do
+create_file "app/assets/stylesheets/application.css.scss" do
   <<-EOS
 @import "bootstrap";
 @import "bootstrap/theme";
   EOS
 end
 
-append_file '.gitignore' do
+append_file ".gitignore" do
   <<-EOS
 .DS_Store
+.env
   EOS
 end
 
-create_file '.slugignore' do
+create_file ".slugignore" do
   <<-EOS
 /test
 /doc
   EOS
 end
 
+create_file "Procfile" do
+  "web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb"
+end
+
+create_file "config/unicorn.rb" do
+  <<-EOS
+worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
+timeout 15
+preload_app true
+
+before_fork do |server, worker|
+  Signal.trap 'TERM' do
+    puts 'Unicorn master intercepting TERM and sending myself QUIT instead'
+    Process.kill 'QUIT', Process.pid
+  end
+
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.connection.disconnect!
+end
+
+after_fork do |server, worker|
+  Signal.trap 'TERM' do
+    puts 'Unicorn worker intercepting TERM and doing nothing. Wait for master to send QUIT'
+  end
+
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.establish_connection
+end
+  EOS
+end
+
+create_file ".env" do
+  <<-EOS
+RACK_ENV=development
+PORT=3000
+  EOS
+end
+
 generate "controller pages index --no-helper --no-assets --no-test-framework"
 
-inject_into_file 'config/routes.rb', :after => "routes.draw do\n" do
+inject_into_file "config/routes.rb", :after => "routes.draw do\n" do
   "  root :to => 'pages#index'\n"
 end
 
+run "bundle exec spring binstub --all"
+
 git :init
 git :add => "."
-# git :commit => "-m 'Setup base Rails app for Heroku with Slim and Twitter Bootstrap.'"
+git :commit => "-m 'Setup base Rails 4.1 app with Slim, Twitter Bootstrap, Byebug, Heroku, Unicorn and New Relic.'"
 
 puts "################################################################################"
 puts "heroku create"
+puts "heroku addons:add newrelic:stark"
 puts "git push heroku master"
+puts "heroku config:set NEW_RELIC_APP_NAME=APP_NAME"
 puts "heroku run rake db:migrate"
 puts "heroku restart"
+puts "heroku addons:open newrelic"
 puts "################################################################################"
 
