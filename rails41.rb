@@ -8,19 +8,18 @@ gem_group :production do
   gem 'unicorn'
 end
 
+gem 'foundation-rails'
 gem 'foreman'
 gem 'slim-rails'
-gem 'bootstrap-sass'
 
 inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
-  "ruby '2.1.1'\n"
+  "ruby '2.1.2'\n"
 end
-
-append_file "app/assets/javascripts/application.js", "//= require bootstrap"
 
 run "bundle install"
 run "bundle exec rake db:create"
 run "bundle exec rake db:migrate"
+generate "foundation:install --slim"
 
 remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
@@ -30,8 +29,8 @@ run "curl https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml >
 
 create_file "app/assets/stylesheets/application.css.scss" do
   <<-EOS
-@import "bootstrap";
-@import "bootstrap/theme";
+@import "foundation_and_overrides";
+/* Add imports of custom sass/scss files here */
   EOS
 end
 
@@ -83,7 +82,8 @@ end
 create_file ".env" do
   <<-EOS
 RACK_ENV=development
-PORT=3000
+PORT=5000
+NEW_RELIC_APP_NAME=CHANGEME
   EOS
 end
 
