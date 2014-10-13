@@ -13,7 +13,7 @@ gem 'foreman'
 gem 'slim-rails'
 
 inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
-  "ruby '2.1.2'\n"
+  "ruby '2.1.3'\n"
 end
 
 run "bundle install"
@@ -97,7 +97,7 @@ run "bundle exec spring binstub --all"
 
 git :init
 git :add => "."
-git :commit => "-m 'Setup base Rails 4.1 app with Slim, Twitter Bootstrap, Byebug, Heroku, Unicorn and New Relic.'"
+git :commit => "-m 'Setup base Rails 4.1 app.'"
 
 puts "################################################################################"
 puts "heroku create"
