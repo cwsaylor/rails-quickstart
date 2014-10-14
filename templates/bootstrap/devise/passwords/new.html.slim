@@ -1,0 +1,9 @@
+h2 Forgot your password?
+
+= bootstrap_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+  = f.alert_message "Please fix the errors below.", error_summary: false
+  = f.email_field :email, autofocus: true
+  = f.submit "Send me reset password instructions"
+
+= render "devise/shared/links"
+

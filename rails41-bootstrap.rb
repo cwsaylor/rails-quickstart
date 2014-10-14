@@ -27,7 +27,7 @@ end
 run "bundle install"
 generate "devise:install"
 generate "devise user"
-generate "devise:views"
+#generate "devise:views"
 run "bundle exec rake db:create"
 # Don't run migrate so you can customize the devise migration
 #run "bundle exec rake db:migrate"
@@ -49,6 +49,7 @@ get path + "bootstrap/styleguide.html.erb", "app/views/pages/styleguide.html.erb
 get path + "bootstrap/index.html.slim", "app/views/pages/index.html.slim"
 get path + "holder.js", "vendor/assets/javascripts/holder.js"
 get path + "unicorn.rb", "config/unicorn.rb"
+get path + "bootstrap/devise", "app/views/"
 
 get "https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml", "config/newrelic.yml"
 
