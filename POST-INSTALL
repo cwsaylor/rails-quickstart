@@ -1,8 +1,0 @@
-heroku create
-heroku addons:add newrelic:stark
-git push heroku master
-heroku config:set NEW_RELIC_APP_NAME=APP_NAME
-heroku run rake db:migrate
-heroku restart
-heroku addons:open newrelic
-
