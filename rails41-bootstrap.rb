@@ -44,8 +44,8 @@ route "root to: 'pages#index'"
 remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
 
-run "curl https://gist.githubusercontent.com/cwsaylor/2090ed878d64526f1c33/raw/1cca9a9dc77b3b99cf9aeea4e86c3e93d3356df6/application.html.slim > app/views/layouts/application.html.slim"
-#template "templates/bootstrap/application.html.slim", "app/views/layouts/application.html.slim"
+#run "curl https://gist.githubusercontent.com/cwsaylor/2090ed878d64526f1c33/raw/1cca9a9dc77b3b99cf9aeea4e86c3e93d3356df6/application.html.slim > app/views/layouts/application.html.slim"
+get "https://gist.githubusercontent.com/cwsaylor/2090ed878d64526f1c33/raw/1cca9a9dc77b3b99cf9aeea4e86c3e93d3356df6/application.html.slim", "app/views/layouts/application.html.slim"
 run "curl https://gist.githubusercontent.com/cwsaylor/ee8cfc01d0623873da8c/raw/0250663f7b2b07a87b3f17bde544ebd07c095316/navbar.html.slim > app/views/layouts/_navbar.html.slim"
 run "curl https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml > config/newrelic.yml"
 run "curl https://gist.githubusercontent.com/cwsaylor/bf4d88b68ef9a7718beb/raw/644dbf399d1ec8cd13cff92fc8c219c8b681da27/holder.js > vendor/assets/javascripts/holder.js"
@@ -163,8 +163,6 @@ run "bundle exec spring binstub --all"
 git :init
 git :add => "."
 git :commit => "-m 'Setup base Rails 4.1 app.'"
-
-readme "POST-INSTALL"
 
 #puts "################################################################################"
 #puts "heroku create"
