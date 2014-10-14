@@ -1,6 +1,4 @@
 # TODO Style devise forms for bootstrap for gem
-# TODO Add forms to style guide
-# TODO Make project name dynamic and update changeme
 # TODO Add a footer to application layout
 
 path = "https://raw.githubusercontent.com/cwsaylor/rails-quickstart/master/templates/"
@@ -54,6 +52,9 @@ get path + "unicorn.rb", "config/unicorn.rb"
 
 get "https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml", "config/newrelic.yml"
 
+gsub_file "app/views/layouts/application.html.slim", "changeme", app_name.titleize
+gsub_file "app/views/layouts/_navbar.html.slim", "changeme", app_name.titleize
+
 inject_into_file 'app/assets/javascripts/application.js', :before => "//= require_tree ." do
   <<-EOS
 //= require bootstrap-sprockets
@@ -86,7 +87,7 @@ end
 application(nil, env: "production") do
   <<-EOS
   # TODO Change default host
-  config.action_mailer.default_url_options = { :host => 'changeme.com' }
+  config.action_mailer.default_url_options = { :host => '#{app_name}.herokuapp.com' }
 
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
@@ -94,7 +95,7 @@ application(nil, env: "production") do
     :authentication => :plain,
     :user_name      => ENV['SENDGRID_USERNAME'],
     :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'changeme.com'
+    :domain         => '#{app_name}.herokuapp.com'
   }
   ActionMailer::Base.delivery_method ||= :smtp
 
@@ -119,7 +120,7 @@ create_file ".env" do
   <<-EOS
 RACK_ENV=development
 PORT=5000
-NEW_RELIC_APP_NAME=CHANGEME
+NEW_RELIC_APP_NAME=#{app_name}
   EOS
 end
 
