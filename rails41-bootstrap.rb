@@ -1,8 +1,6 @@
 # TODO Style devise forms for bootstrap for gem
 # TODO Add forms to style guide
-# TODO Move templates into gem
 # TODO Make project name dynamic and update changeme
-# TODO Output readme with readme command
 # TODO Add a footer to application layout
 
 path = "https://raw.githubusercontent.com/cwsaylor/rails-quickstart/master/templates/"
@@ -38,7 +36,7 @@ run "bundle exec rake db:create"
 
 run "erb2slim -d app/views/devise"
 
-generate "controller pages index --no-helper --no-assets --no-test-framework"
+generate "controller pages --no-helper --no-assets --no-test-framework"
 
 route "get '/styleguide', to: 'pages#styleguide', as: :styleguide"
 route "root to: 'pages#index'"
@@ -47,26 +45,20 @@ remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
 
 get path + "bootstrap/application.html.slim", "app/views/layouts/application.html.slim"
+get path + "bootstrap/application.css.scss", "app/assets/stylesheets/application.css.scss"
 get path + "bootstrap/navbar.html.slim", "app/views/layouts/_navbar.html.slim"
 get path + "bootstrap/styleguide.html.erb", "app/views/pages/styleguide.html.erb"
 get path + "bootstrap/index.html.slim", "app/views/pages/index.html.slim"
 get path + "holder.js", "vendor/assets/javascripts/holder.js"
+get path + "unicorn.rb", "config/unicorn.rb"
 
 run "curl https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml > config/newrelic.yml"
 
-create_file "app/assets/stylesheets/application.css.scss" do
-  <<-EOS
-@import "bootstrap-sprockets";
-@import "bootstrap";
-@import "rails_bootstrap_forms";
-/*@import "bootstrap/theme";*/
-  EOS
-end
-
-gsub_file "app/assets/javascripts/application.js", "turbolinks", "bootstrap-sprockets"
-
 inject_into_file 'app/assets/javascripts/application.js', :before => "//= require_tree ." do
-  "//= require holder\n"
+  <<-EOS
+//= require bootstrap-sprockets
+//= require holder
+  EOS
 end
 
 append_file ".gitignore" do
@@ -83,7 +75,6 @@ create_file ".slugignore" do
   EOS
 end
 
-#inject_into_file 'config/environments/development.rb', :before => /^end$/ do
 application(nil, env: "development") do
   "config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
 end
@@ -110,45 +101,6 @@ application(nil, env: "production") do
   EOS
 end
 
-create_file "Procfile" do
-  "web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb"
-end
-
-create_file "config/unicorn.rb" do
-  <<-EOS
-worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
-timeout 15
-preload_app true
-
-before_fork do |server, worker|
-  Signal.trap 'TERM' do
-    puts 'Unicorn master intercepting TERM and sending myself QUIT instead'
-    Process.kill 'QUIT', Process.pid
-  end
-
-  defined?(ActiveRecord::Base) and
-    ActiveRecord::Base.connection.disconnect!
-end
-
-after_fork do |server, worker|
-  Signal.trap 'TERM' do
-    puts 'Unicorn worker intercepting TERM and doing nothing. Wait for master to send QUIT'
-  end
-
-  defined?(ActiveRecord::Base) and
-    ActiveRecord::Base.establish_connection
-end
-  EOS
-end
-
-create_file ".env" do
-  <<-EOS
-RACK_ENV=development
-PORT=5000
-NEW_RELIC_APP_NAME=CHANGEME
-  EOS
-end
-
 append_to_file 'test/test_helper.rb' do
   <<-EOS
 
@@ -159,19 +111,31 @@ end
   EOS
 end
 
+create_file "Procfile" do
+  "web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb"
+end
+
+create_file ".env" do
+  <<-EOS
+RACK_ENV=development
+PORT=5000
+NEW_RELIC_APP_NAME=CHANGEME
+  EOS
+end
+
 run "bundle exec spring binstub --all"
 
 git :init
 git :add => "."
 git :commit => "-m 'Setup base Rails 4.1 app.'"
 
-#puts "################################################################################"
-#puts "heroku create"
-#puts "heroku addons:add newrelic:stark"
-#puts "git push heroku master"
-#puts "heroku config:set NEW_RELIC_APP_NAME=APP_NAME"
-#puts "heroku run rake db:migrate"
-#puts "heroku restart"
-#puts "heroku addons:open newrelic"
-#puts "################################################################################"
+puts "################################################################################"
+puts "heroku create"
+puts "heroku addons:add newrelic:stark"
+puts "git push heroku master"
+puts "heroku config:set NEW_RELIC_APP_NAME=APP_NAME"
+puts "heroku run rake db:migrate"
+puts "heroku restart"
+puts "heroku addons:open newrelic"
+puts "################################################################################"
 
