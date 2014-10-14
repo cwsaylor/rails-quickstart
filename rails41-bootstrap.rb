@@ -52,7 +52,7 @@ get path + "bootstrap/index.html.slim", "app/views/pages/index.html.slim"
 get path + "holder.js", "vendor/assets/javascripts/holder.js"
 get path + "unicorn.rb", "config/unicorn.rb"
 
-run "curl https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml > config/newrelic.yml"
+get "https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml", "config/newrelic.yml"
 
 inject_into_file 'app/assets/javascripts/application.js', :before => "//= require_tree ." do
   <<-EOS
