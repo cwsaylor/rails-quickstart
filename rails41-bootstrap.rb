@@ -1,7 +1,8 @@
-# TODO Style devise forms for bootstrap for gem
 # TODO Add a footer to application layout
 
-path = "https://raw.githubusercontent.com/cwsaylor/rails-quickstart/master/templates/"
+def source_paths
+  [File.expand_path(File.dirname(__FILE__))]
+end
 
 gem_group :test, :development do
   gem 'byebug'
@@ -32,7 +33,7 @@ run "bundle exec rake db:create"
 # Don't run migrate so you can customize the devise migration
 #run "bundle exec rake db:migrate"
 
-run "erb2slim -d app/views/devise"
+#run "erb2slim -d app/views/devise"
 
 generate "controller pages --no-helper --no-assets --no-test-framework"
 
@@ -42,14 +43,15 @@ route "root to: 'pages#index'"
 remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
 
-get path + "bootstrap/application.html.slim", "app/views/layouts/application.html.slim"
-get path + "bootstrap/application.css.scss", "app/assets/stylesheets/application.css.scss"
-get path + "bootstrap/navbar.html.slim", "app/views/layouts/_navbar.html.slim"
-get path + "bootstrap/styleguide.html.erb", "app/views/pages/styleguide.html.erb"
-get path + "bootstrap/index.html.slim", "app/views/pages/index.html.slim"
-get path + "holder.js", "vendor/assets/javascripts/holder.js"
-get path + "unicorn.rb", "config/unicorn.rb"
-get path + "bootstrap/devise", "app/views/"
+copy_file "templates/bootstrap/application.html.slim", "app/views/layouts/application.html.slim"
+copy_file "templates/bootstrap/application.css.scss", "app/assets/stylesheets/application.css.scss"
+copy_file "templates/bootstrap/navbar.html.slim", "app/views/layouts/_navbar.html.slim"
+copy_file "templates/bootstrap/styleguide.html.erb", "app/views/pages/styleguide.html.erb"
+copy_file "templates/bootstrap/index.html.slim", "app/views/pages/index.html.slim"
+copy_file "templates/holder.js", "vendor/assets/javascripts/holder.js"
+copy_file "templates/unicorn.rb", "config/unicorn.rb"
+
+directory "templates/bootstrap/devise", "app/views/devise"
 
 get "https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml", "config/newrelic.yml"
 
@@ -141,3 +143,4 @@ puts "heroku restart"
 puts "heroku addons:open newrelic"
 puts "################################################################################"
 
+readme "README.md"
