@@ -1,66 +1,35 @@
 # Rails Quickstart Template
 
-This Rails template brings a base rails app up to the bare minimum I use for starting any Rails application. It includes:
+This Rails template brings a base rails app up to the bare minimum I use for starting any Rails application and deploying on Heroku.
 
-* Postgresql
-* Simple Form
-* Devise (optional)
-* ActiveAdmin (optional)
-* Delayed Job w/ Hirefire.io support (optional)
-* Zurb Foundation (Rails 4)
-* Twitter Bootstrap (Rails 3)
+It includes:
+
+* Bootstrap Form Helpers
+* Devise
+* Twitter Bootstrap
 * Heroku, with configs for Sendgrid and New Relic
 * Slim
-* RSpec with Capybara and Factory Girl
-* Guard
-* Pry
-* Remote Pry debugger
 * Foreman
+* Unicorn
 
 ## Requirements
 
-* Ruby 1.9.3
+* Ruby 2.1.3
 * Bundler
-* Rails 3
+* Rails 4.1
 * Git
-
-## Rails 3 Usage
-
-    rails new appname -m https://raw.github.com/cwsaylor/rails-quickstart/master/rails3.rb -d postgresql --skip-test-unit
 
 ## Rails 4 Usage
 
-    rails new appname -m https://raw.github.com/cwsaylor/rails-quickstart/master/rails4.rb -d postgresql --skip-test-unit
+    git clone git@github.com:cwsaylor/rails-quickstart.git
+    rails new appname -m ./rails-quickstart/master/rails41-bootstrap.rb -d postgresql
+    cd appname
+    rake db:migrate
+    foreman start
 
 ## Post Install Notes
 
-Login to /admin with admin@example.com and password. You'll want to change this.
-
-    heroku create
-    git push heroku master
-    heroku run rake db:migrate
-    heroku restart
-    heroku addons:add zerigo_dns:basic
-    heroku addons:add sendgrid:starter
-    heroku addons:add newrelic:standard
-    heroku config:set NEW_RELIC_APP_NAME=appname
-    heroku addons:open sendgrid
-    heroku addons:open newrelic
-    heroku addons:open zerigo_dns
-
-Delete A record entries and setup a redirect form domain.com to www.domain.com
-Change CNAME to appname.herokuapp.com
-
-If you setup delayed job, add some workers
-
-    heroku ps:scale worker=1
-
-Setup an account at http://hirefire.io and add your application.
-
-  Run `guard` to watch for changes to specs
-  Run `foreman` to start your server and workers
-
-See https://github.com/nixme/pry-debugger for remote pry debugging
+Edit the Devise migration and model and uncomment desired features.
 
 ## Thanks
 

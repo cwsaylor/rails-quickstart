@@ -1,5 +1,3 @@
-# TODO Add a footer to application layout
-
 def source_paths
   [File.expand_path(File.dirname(__FILE__))]
 end
@@ -32,8 +30,6 @@ generate "devise user"
 run "bundle exec rake db:create"
 # Don't run migrate so you can customize the devise migration
 #run "bundle exec rake db:migrate"
-
-#run "erb2slim -d app/views/devise"
 
 generate "controller pages --no-helper --no-assets --no-test-framework"
 
@@ -133,14 +129,5 @@ git :init
 git :add => "."
 git :commit => "-m 'Setup base Rails 4.1 app.'"
 
-puts "################################################################################"
-puts "heroku create"
-puts "heroku addons:add newrelic:stark"
-puts "git push heroku master"
-puts "heroku config:set NEW_RELIC_APP_NAME=APP_NAME"
-puts "heroku run rake db:migrate"
-puts "heroku restart"
-puts "heroku addons:open newrelic"
-puts "################################################################################"
+readme "POST-INSTALL.md"
 
-readme "README.md"
