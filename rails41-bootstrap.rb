@@ -44,6 +44,7 @@ copy_file "templates/bootstrap/application.css.scss", "app/assets/stylesheets/ap
 copy_file "templates/bootstrap/navbar.html.slim", "app/views/layouts/_navbar.html.slim"
 copy_file "templates/bootstrap/styleguide.html.erb", "app/views/pages/styleguide.html.erb"
 copy_file "templates/bootstrap/index.html.slim", "app/views/pages/index.html.slim"
+copy_file "templates/bootstrap/bootstrap_helper.rb", "app/helpers/bootstrap_helper.rb"
 copy_file "templates/holder.js", "vendor/assets/javascripts/holder.js"
 copy_file "templates/unicorn.rb", "config/unicorn.rb"
 
@@ -73,6 +74,10 @@ create_file ".slugignore" do
 /test
 /doc
   EOS
+end
+
+application do
+  "config.app_generators.scaffold_controller :scaffold_controller"
 end
 
 application(nil, env: "development") do
