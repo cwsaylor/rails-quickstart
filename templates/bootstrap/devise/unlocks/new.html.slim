@@ -1,9 +1,13 @@
-h2 Resend unlock instructions
+.row
+  .col-md-6.col-md-offset-3
+    .panel.panel-default
+      .panel-heading
+        h2.panel-title Resend unlock instructions
+      .panel-body
+        = bootstrap_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
+          = f.alert_message "Please fix the errors below.", error_summary: false
+          = f.email_field :email, autofocus: true
+          = f.submit "Resend unlock instructions"
 
-= bootstrap_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
-  = f.alert_message "Please fix the errors below.", error_summary: false
-  = f.email_field :email, autofocus: true
-  = f.submit "Resend unlock instructions"
-
-= render "devise/shared/links"
+    = render "devise/shared/links"
 
