@@ -10,6 +10,7 @@ html[lang="en"]
   body
     .container
       = render 'layouts/navbar'
+      = bootstrap_flash
       = yield
     = javascript_include_tag "application"
 

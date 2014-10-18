@@ -18,7 +18,7 @@ module BootstrapHelper
       Array(message).each do |msg|
         text = content_tag(:div,
                            content_tag(:button,
-                                       content_tag(:span, "&times;", "aria-hidden" => "true") + content_tag(:span, "Close", class: "sr-only"),
+                                       content_tag(:span, "&times;".html_safe, "aria-hidden" => "true") + content_tag(:span, "Close", class: "sr-only"),
                                        class: "close", data: { dismiss: "alert" }) + msg,
                            class: "alert alert-#{type} alert-dismissible", role: "alert")
         flash_messages << text if message
