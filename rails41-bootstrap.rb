@@ -47,6 +47,8 @@ copy_file "templates/bootstrap/index.html.slim", "app/views/pages/index.html.sli
 copy_file "templates/bootstrap/bootstrap_helper.rb", "app/helpers/bootstrap_helper.rb"
 copy_file "templates/holder.js", "vendor/assets/javascripts/holder.js"
 copy_file "templates/unicorn.rb", "config/unicorn.rb"
+remove_file "test/fixtures/users.yml"
+copy_file "templates/users.yml", "test/fixtures/users.yml"
 
 directory "templates/bootstrap/devise", "app/views/devise"
 
