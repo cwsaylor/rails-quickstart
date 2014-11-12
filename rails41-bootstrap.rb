@@ -20,7 +20,7 @@ gem 'foreman'
 gem 'slim-rails'
 
 inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
-  "ruby '2.1.3'\n"
+  "ruby '2.1.4'\n"
 end
 
 run "bundle install"
@@ -47,6 +47,7 @@ copy_file "templates/bootstrap/index.html.slim", "app/views/pages/index.html.sli
 copy_file "templates/bootstrap/bootstrap_helper.rb", "app/helpers/bootstrap_helper.rb"
 copy_file "templates/holder.js", "vendor/assets/javascripts/holder.js"
 copy_file "templates/unicorn.rb", "config/unicorn.rb"
+copy_file "templates/powenv", ".powenv"
 remove_file "test/fixtures/users.yml"
 copy_file "templates/users.yml", "test/fixtures/users.yml"
 
