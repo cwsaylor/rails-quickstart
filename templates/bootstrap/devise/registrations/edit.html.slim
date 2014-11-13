@@ -1,28 +1,30 @@
-.row
-  .col-md-6.col-md-offset-3
-    .panel.panel-default
-      .panel-heading
-        h2.panel-title Edit #{resource_name.to_s.humanize}
-      .panel-body
-        = bootstrap_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
-          = f.alert_message "Please fix the errors below.", error_summary: false
-          = f.email_field :email, autofocus: true, icon: "envelope"
-          - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-            #confirmation
-              ' Currently waiting confirmation for:
-              = resource.unconfirmed_email
-          = f.password_field :password, autocomplete: "off", help: "leave blank if you don't want to change it"
-          = f.password_field :password_confirmation, autocomplete: "off"
-          = f.password_field :current_password, autocomplete: "off", help: "we need your current password to confirm your changes"
-          = f.submit "Update"
+.container
+  .row
+    .col-md-6.col-md-offset-3
+      .panel.panel-default
+        .panel-heading
+          h2.panel-title Edit #{resource_name.to_s.humanize}
+        .panel-body
+          = bootstrap_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+            = f.alert_message "Please fix the errors below.", error_summary: false
+            = f.email_field :email, autofocus: true, icon: "envelope"
+            = f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, include_blank: true
+            - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+              #confirmation
+                ' Currently waiting confirmation for:
+                = resource.unconfirmed_email
+            = f.password_field :password, autocomplete: "off", help: "leave blank if you don't want to change it"
+            = f.password_field :password_confirmation, autocomplete: "off"
+            = f.password_field :current_password, autocomplete: "off", help: "we need your current password to confirm your changes"
+            = f.submit "Update"
 
-    .panel.panel-default
-      .panel-heading
-        h3.panel-title Cancel my account
-      .panel-body
-        p
-          ' Unhappy?
-          = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-default"
-    p
-      = link_to "Back", :back
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title Cancel my account
+        .panel-body
+          p
+            ' Unhappy?
+            = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-default"
+      p
+        = link_to "Back", :back
 
