@@ -38,6 +38,7 @@ route "root to: 'pages#index'"
 
 remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
+remove_file "test/fixtures/users.yml"
 
 copy_file "templates/bootstrap/application.html.slim", "app/views/layouts/application.html.slim"
 copy_file "templates/bootstrap/application.css.scss", "app/assets/stylesheets/application.css.scss"
@@ -48,7 +49,6 @@ copy_file "templates/bootstrap/bootstrap_helper.rb", "app/helpers/bootstrap_help
 copy_file "templates/holder.js", "vendor/assets/javascripts/holder.js"
 copy_file "templates/unicorn.rb", "config/unicorn.rb"
 copy_file "templates/powenv", ".powenv"
-remove_file "test/fixtures/users.yml"
 copy_file "templates/users.yml", "test/fixtures/users.yml"
 
 directory "templates/bootstrap/devise", "app/views/devise"
