@@ -14,22 +14,27 @@ end
 
 gem 'autoprefixer-rails'
 gem 'bootstrap_form'
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'bootstrap-sass'
 gem 'devise'
 gem 'foreman'
 gem 'slim-rails'
 
 inject_into_file "Gemfile", :after => "source 'https://rubygems.org'\n" do
-  "ruby '2.1.4'\n"
+  "ruby '2.1.5'\n"
 end
 
 run "bundle install"
+
 generate "devise:install"
 generate "devise user"
 #generate "devise:views"
+
+devise_migration = Dir["db/migrate/*devise_create_users.rb"].first
+gsub_file(devise_migration, "# t", "t")
+gsub_file(devise_migration, "# add_index", "add_index")
+
 run "bundle exec rake db:create"
-# Don't run migrate so you can customize the devise migration
-#run "bundle exec rake db:migrate"
+run "bundle exec rake db:migrate"
 
 generate "controller pages --no-helper --no-assets --no-test-framework"
 
