@@ -1,0 +1,13 @@
+.container
+  .row
+    .medium-6.medium-offset-3
+      h2 Sign up
+      = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+        = f.input :email
+        /= f.input :time_zone, as: :time_zone, priroty: /US/
+        = f.input :password, hint: "#{@minimum_password_length} characters minimum"
+        = f.input :password_confirmation
+        = f.submit "Sign up", class: "button"
+
+      = render "devise/shared/links"
+
