@@ -1,14 +1,11 @@
-.container
-  .row
-    .col-md-6.col-md-offset-3
-      .panel.panel-default
-        .panel-heading
-          h2.panel-title Resend confirmation instructions
-        .panel-body
-          = bootstrap_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
-            = f.alert_message "Please fix the errors below.", error_summary: false
-            = f.email_field :email, autofocus: true, icon: "envelope"
-            = f.submit "Resend confirmation instructions"
+.row
+  .col-md-6.col-md-offset-3
+    .well
+      h2 Resend confirmation instructions
+      = bootstrap_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+        = f.alert_message "Please fix the errors below.", error_summary: false
+        = f.email_field :email, autofocus: true, icon: "envelope"
+        = f.submit "Resend confirmation instructions"
 
-      = render "devise/shared/links"
+    = render "devise/shared/links"
 

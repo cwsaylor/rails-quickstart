@@ -10,6 +10,10 @@ before_fork do |server, worker|
 
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
+
+  if defined?(Redis)
+    $redis.quit
+  end
 end
 
 after_fork do |server, worker|
@@ -19,5 +23,9 @@ after_fork do |server, worker|
 
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.establish_connection
+
+  if defined?(Redis)
+    $redis = establish_redis_connection
+  end
 end
 

@@ -6,30 +6,50 @@ It includes:
 
 * Bootstrap Form Helpers
 * Devise
+* Devise Async
 * Twitter Bootstrap
+* Bootstrap form
+* Bootswatch
+* Styleguide
 * Heroku, with configs for Sendgrid and New Relic
 * Slim
 * Foreman
 * Unicorn
+* Resque
+* Dalli
+* Active Admin
+* Holder.js
+* Pow config for reading .env
 
 ## Requirements
 
-* Ruby 2.1.3
+* Ruby 2.1.5
 * Bundler
 * Rails 4.1
 * Git
+* Pow
 
 ## Rails 4 Usage
 
     git clone git@github.com:cwsaylor/rails-quickstart.git
-    rails new appname -m ./rails-quickstart/master/rails41-bootstrap.rb -d postgresql
+    rails new appname -m ./rails-quickstart/master/rails41.rb -d postgresql
     cd appname
-    rake db:migrate
     foreman start
 
-## Post Install Notes
+Navigate to http://0.0.0.0:5000
 
-Edit the Devise migration and model and uncomment desired features.
+## Heroku Setup Notes
+
+    heroku create
+    heroku addons:add mandrill:starter
+    heroku addons:add newrelic:stark
+    heroku addons:add redistogo
+    heroku addons:add memcachier:dev
+    heroku config:set NEW_RELIC_APP_NAME=APP_NAME
+    git push heroku master
+    heroku run rake db:migrate
+    heroku restart
+    heroku addons:open newrelic
 
 ## Thanks
 
