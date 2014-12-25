@@ -11,7 +11,7 @@ It includes:
 * Bootstrap form
 * Bootswatch
 * Styleguide
-* Heroku, with configs for Sendgrid and New Relic
+* Heroku, with configs for Mandrill, Redistogo, Memcachier and New Relic
 * Slim
 * Foreman
 * Unicorn
