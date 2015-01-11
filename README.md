@@ -1,14 +1,13 @@
 # Rails Quickstart Template
 
-This Rails template brings a base rails app up to the bare minimum I use for starting any Rails application and deploying on Heroku.
+This template configures a Rails 4.2 app for production level readiness on Heroku.
 
 It includes:
 
 * Bootstrap Form Helpers
 * Devise
-* Devise Async
 * Twitter Bootstrap
-* Bootstrap form
+* Bootstrap Form
 * Bootswatch
 * Styleguide
 * Heroku, with configs for Mandrill, Redistogo, Memcachier and New Relic
@@ -23,7 +22,7 @@ It includes:
 
 ## Requirements
 
-* Ruby 2.1.5
+* Ruby 2.2.0
 * Bundler
 * Rails 4.1
 * Git

@@ -12,29 +12,29 @@ gem_group :production do
   gem 'unicorn'
 end
 
-gem 'activeadmin', github: 'activeadmin'
+#gem 'activeadmin', github: 'activeadmin'
 gem 'autoprefixer-rails'
 gem 'bootstrap_form'
 gem 'bootstrap-sass'
 gem 'bootswatch-rails'
 gem 'dalli'
 gem 'devise'
-gem 'devise-async'
 gem 'foreman'
 gem 'slim-rails'
 gem 'redis'
 gem 'resque'
+gem 'resque-scheduler'
 
 inject_into_file "Gemfile", after: "source 'https://rubygems.org'\n" do
-  "ruby '2.1.5'\n"
+  "ruby '2.2.0'\n"
 end
 
 run "bundle install"
 
 generate "devise:install"
 generate "devise user"
-generate "active_admin:install"
-generate "active_admin:resource User"
+#generate "active_admin:install"
+#generate "active_admin:resource User"
 
 devise_migration = Dir["db/migrate/*devise_create_users.rb"].first
 gsub_file(devise_migration, "# t", "t")
@@ -58,9 +58,11 @@ copy_file "templates/bootstrap/navbar.html.slim"      , "app/views/layouts/_navb
 copy_file "templates/bootstrap/styleguide.html.erb"   , "app/views/pages/styleguide.html.erb"
 copy_file "templates/bootstrap/index.html.slim"       , "app/views/pages/index.html.slim"
 copy_file "templates/bootstrap/bootstrap_helper.rb"   , "app/helpers/bootstrap_helper.rb"
-copy_file "templates/admin/mailers.rb"                , "app/admin/mailers.rb"
+#copy_file "templates/admin/mailers.rb"                , "app/admin/mailers.rb"
+copy_file "templates/initializers/active_job.rb"      , "config/initializers/active_job.rb"
 copy_file "templates/initializers/redis.rb"           , "config/initializers/redis.rb"
 copy_file "templates/initializers/resque.rb"          , "config/initializers/resque.rb"
+copy_file "templates/tasks/resque.rake"               , "lib/tasks/resque.rake"
 copy_file "templates/javascripts/holder.js"           , "vendor/assets/javascripts/holder.js"
 copy_file "templates/config/unicorn.rb"               , "config/unicorn.rb"
 copy_file "templates/fixtures/users.yml"              , "test/fixtures/users.yml"
@@ -74,15 +76,22 @@ gsub_file "app/views/layouts/application.html.slim", "changeme" , app_name.title
 gsub_file "app/views/layouts/_navbar.html.slim", "changeme" , app_name.titleize
 gsub_file "config/environments/production.rb", "# config.cache_store = :mem_cache_store", "config.cache_store = :mem_cache_store"
 gsub_file "app/assets/javascripts/application.js", "//= require_tree .\n", ""
-gsub_file "app/models/user.rb", "devise", "devise :async,"
 
-inject_into_file "config/routes.rb", after: "ActiveAdmin::Devise\.config\n" do
+inject_into_file "app/models/user.rb", before: "end" do
   <<-EOS
-  authenticate :admin_user do
-    mount Resque::Server.new, :at => "/jobs"
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
   end
   EOS
 end
+
+#inject_into_file "config/routes.rb", after: "ActiveAdmin::Devise\.config\n" do
+  #<<-EOS
+  #authenticate :admin_user do
+    #mount Resque::Server.new, :at => "/jobs"
+  #end
+  #EOS
+#end
 
 append_file "app/assets/javascripts/application.js" do
   <<-EOS
@@ -98,9 +107,9 @@ append_file ".gitignore" do
   EOS
 end
 
-create_file "config/initializers/devise_async.rb" do
+create_file ".ruby-version" do
   <<-EOS
-Devise::Async.backend = :resque
+2.2.0
   EOS
 end
 
@@ -158,17 +167,6 @@ resque: env INTERVAL=0.1 QUEUES=* bundle exec rake resque:work
   EOS
 end
 
-create_file "lib/tasks/resque.rake" do
-  <<-EOS
-require 'resque/tasks'
-
-task "resque:setup" => :environment do
-  #for redistogo on heroku http://stackoverflow.com/questions/2611747/rails-resque-workers-fail-with-pgerror-server-closed-the-connection-unexpectedl
-  Resque.before_fork = Proc.new { ActiveRecord::Base.establish_connection }
-end
-  EOS
-end
-
 create_file ".env" do
   <<-EOS
 RACK_ENV=development
@@ -182,5 +180,5 @@ run "bundle exec spring binstub --all"
 
 git :init
 git :add => "."
-git :commit => "-m 'Setup base Rails 4.1 app.'"
+git :commit => "-m 'Setup base Rails 4.2 app.'"
 
