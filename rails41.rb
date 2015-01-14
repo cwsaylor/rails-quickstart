@@ -2,10 +2,6 @@ def source_paths
   [File.expand_path(File.dirname(__FILE__))]
 end
 
-gem_group :test, :development do
-  gem 'byebug'
-end
-
 gem_group :production do
   gem 'newrelic_rpm'
   gem 'rails_12factor'
@@ -134,6 +130,11 @@ end
 
 application(nil, env: "production") do
   <<-EOS
+
+  config.to_prepare { Devise::SessionsController.force_ssl }
+  config.to_prepare { Devise::RegistrationsController.force_ssl }
+  config.to_prepare { Devise::PasswordsController.force_ssl }
+
   # TODO Change default host
   config.action_mailer.default_url_options = { :host => '#{app_name}.herokuapp.com' }
 

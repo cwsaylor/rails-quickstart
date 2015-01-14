@@ -24,7 +24,7 @@ It includes:
 
 * Ruby 2.2.0
 * Bundler
-* Rails 4.1
+* Rails 4.2
 * Git
 * Pow
 
