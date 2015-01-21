@@ -121,11 +121,11 @@ application do
 end
 
 application(nil, env: "development") do
-  "config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
+  "config.action_mailer.default_url_options = { :host => 'localhost:5000' }\n"
 end
 
 application(nil, env: "test") do
-  "config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
+  "config.action_mailer.default_url_options = { :host => 'localhost:5000' }\n"
 end
 
 application(nil, env: "production") do
