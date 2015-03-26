@@ -1,0 +1,21 @@
+.row
+  .medium-6.medium-offset-3
+    h2 Edit #{resource_name.to_s.humanize}
+    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+      = f.input :email
+      /= f.input :time_zone, priority: /US/
+      - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+        #confirmation
+          ' Currently waiting confirmation for:
+          = resource.unconfirmed_email
+      = f.input :password, hint: "leave blank if you don't want to change it"
+      = f.input :password_confirmation
+      = f.input :current_password, hint: "we need your current password to confirm your changes"
+      = f.submit "Update", class: "button"
+
+    h3 Cancel my account
+    p
+      ' Unhappy?
+      = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "button"
+    p
+      = link_to "Back", :back

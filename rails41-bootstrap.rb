@@ -8,7 +8,11 @@ gem_group :production do
   gem 'unicorn'
 end
 
-#gem 'activeadmin', github: 'activeadmin'
+gem_group :test, :development do
+  gem "dotenv-rails"
+end
+
+gem 'activeadmin', github: 'activeadmin'
 gem 'autoprefixer-rails'
 gem 'bootstrap_form'
 gem 'bootstrap-sass'
@@ -22,15 +26,15 @@ gem 'resque'
 gem 'resque-scheduler'
 
 inject_into_file "Gemfile", after: "source 'https://rubygems.org'\n" do
-  "ruby '2.2.0'\n"
+  "ruby '2.2.1'\n"
 end
 
 run "bundle install"
 
 generate "devise:install"
 generate "devise user"
-#generate "active_admin:install"
-#generate "active_admin:resource User"
+generate "active_admin:install"
+generate "active_admin:resource User"
 
 devise_migration = Dir["db/migrate/*devise_create_users.rb"].first
 gsub_file(devise_migration, "# t", "t")
@@ -54,7 +58,7 @@ copy_file "templates/bootstrap/navbar.html.slim"      , "app/views/layouts/_navb
 copy_file "templates/bootstrap/styleguide.html.erb"   , "app/views/pages/styleguide.html.erb"
 copy_file "templates/bootstrap/index.html.slim"       , "app/views/pages/index.html.slim"
 copy_file "templates/bootstrap/bootstrap_helper.rb"   , "app/helpers/bootstrap_helper.rb"
-#copy_file "templates/admin/mailers.rb"                , "app/admin/mailers.rb"
+copy_file "templates/admin/mailers.rb"                , "app/admin/mailers.rb"
 copy_file "templates/initializers/active_job.rb"      , "config/initializers/active_job.rb"
 copy_file "templates/initializers/redis.rb"           , "config/initializers/redis.rb"
 copy_file "templates/initializers/resque.rb"          , "config/initializers/resque.rb"
@@ -81,13 +85,13 @@ inject_into_file "app/models/user.rb", before: "end" do
   EOS
 end
 
-#inject_into_file "config/routes.rb", after: "ActiveAdmin::Devise\.config\n" do
-  #<<-EOS
-  #authenticate :admin_user do
-    #mount Resque::Server.new, :at => "/jobs"
-  #end
-  #EOS
-#end
+inject_into_file "config/routes.rb", after: "ActiveAdmin::Devise\.config\n" do
+  <<-EOS
+  authenticate :admin_user do
+    mount Resque::Server.new, :at => "/jobs"
+  end
+  EOS
+end
 
 append_file "app/assets/javascripts/application.js" do
   <<-EOS
@@ -105,7 +109,7 @@ end
 
 create_file ".ruby-version" do
   <<-EOS
-2.2.0
+2.2.1
   EOS
 end
 
