@@ -16,8 +16,9 @@ gem 'activeadmin', github: 'activeadmin'
 gem 'dalli'
 gem 'devise'
 gem 'foreman'
-gem 'foundation-rails'
+gem 'foundation-rails', github: 'zurb/foundation-rails'
 gem 'foundation-icons-sass-rails'
+gem 'jquery-turbolinks'
 gem 'slim-rails'
 gem 'redis'
 gem 'resque'
@@ -34,8 +35,8 @@ generate "devise:install"
 generate "devise user"
 generate "active_admin:install"
 generate "active_admin:resource User"
-
-generate "foundation:install"
+generate "foundation:install -s --slim"
+generate "simple_form:install --foundation"
 
 devise_migration = Dir["db/migrate/*devise_create_users.rb"].first
 gsub_file(devise_migration, "# t", "t")
@@ -51,10 +52,12 @@ route "root to: 'pages#index'"
 
 remove_file "app/views/layouts/application.html.erb"
 remove_file "app/assets/stylesheets/application.css"
+remove_file "app/assets/javascripts/application.js"
 remove_file "test/fixtures/users.yml"
 
 copy_file "templates/foundation/application.html.slim" , "app/views/layouts/application.html.slim"
 copy_file "templates/foundation/application.css.scss"  , "app/assets/stylesheets/application.css.scss"
+copy_file "templates/foundation/application.js"        , "app/assets/javascripts/application.js"
 copy_file "templates/foundation/navbar.html.slim"      , "app/views/layouts/_navbar.html.slim"
 #copy_file "templates/bootstrap/styleguide.html.erb"   , "app/views/pages/styleguide.html.erb"
 copy_file "templates/foundation/index.html.slim"       , "app/views/pages/index.html.slim"
@@ -77,8 +80,6 @@ get "https://gist.githubusercontent.com/rwdaigle/2253296/raw/newrelic.yml", "con
 gsub_file "app/views/layouts/application.html.slim", "changeme" , app_name.titleize
 gsub_file "app/views/layouts/_navbar.html.slim", "changeme" , app_name.titleize
 gsub_file "config/environments/production.rb", "# config.cache_store = :mem_cache_store", "config.cache_store = :mem_cache_store"
-gsub_file "app/assets/javascripts/application.js", "//= require_tree .", "//= require holder"
-gsub_file "app/assets/javascripts/application.js", "//= require jquery", "//= require jquery2"
 
 inject_into_file "app/models/user.rb", before: "end" do
   <<-EOS
