@@ -54,7 +54,7 @@ end
 
 create_file "config/unicorn.rb" do
   <<-EOS
-worker_processes Integer(ENV["WEB_CONCURRENCY"] || 3)
+worker_processes Integer(ENV["WEB_CONCURRENCY"] || 2)
 timeout 15
 preload_app true
 
