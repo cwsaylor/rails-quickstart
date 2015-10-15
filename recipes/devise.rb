@@ -21,7 +21,7 @@ after_bundle do
     EOS
   end
 
-  inject_into_file "app/models/user.rb", ":async, ", after: "database_authenticatable, "
+  inject_into_file "app/models/user.rb", ":async, :confirmable, ", after: "database_authenticatable, "
 
   application(nil, env: "production") do
     <<-EOS
