@@ -4,51 +4,56 @@ This template configures a Rails 4.2 app for production level readiness on Herok
 
 It includes:
 
-* Bootstrap Form Helpers
+* Twitter Bootstrap or Zurb Foundation
+* Simple Form
 * Devise
-* Twitter Bootstrap
-* Bootstrap Form
-* Bootswatch
-* Styleguide
-* Heroku, with configs for Mandrill, Redistogo, Memcachier and New Relic
+* Heroku
 * Slim
 * Foreman
 * Unicorn
-* Resque
+* Redis
+* Sidekiq
 * Dalli
 * Active Admin
-* Holder.js
-* Pow config for reading .env
 
 ## Requirements
 
-* Ruby 2.2.0
+* Ruby 2.2.3
 * Bundler
 * Rails 4.2
 * Git
-* Pow
 
-## Rails 4 Usage
+## Usage
 
     git clone git@github.com:cwsaylor/rails-quickstart.git
-    rails new appname -m ./rails-quickstart/master/rails41.rb -d postgresql
+    rails new appname -m ./rails-quickstart/base.rb -d postgresql
     cd appname
     foreman start
 
 Navigate to http://0.0.0.0:5000
 
+You will want to secure your sidekiq job admin.
+http://0.0.0.0:5000/sidekiq
+
+See here:
+https://github.com/mperham/sidekiq/wiki/Monitoring
+
+You may want to clean up the Gemfile as the template process puts gems in an odd order,
+then commit your changes.
+
+    git add .
+    git commit -m "Initial Rails app"
+
 ## Heroku Setup Notes
 
     heroku create
-    heroku addons:add mandrill:starter
-    heroku addons:add newrelic:stark
-    heroku addons:add redistogo
-    heroku addons:add memcachier:dev
-    heroku config:set NEW_RELIC_APP_NAME=APP_NAME
+    heroku addons:create sendgrid:starter
+    heroku addons:create redistogo:nano
+    heroku addons:create memcachier:dev
+    heroku addson:create rollbar
     git push heroku master
     heroku run rake db:migrate
     heroku restart
-    heroku addons:open newrelic
 
 ## Thanks
 

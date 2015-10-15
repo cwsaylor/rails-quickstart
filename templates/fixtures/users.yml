@@ -1,5 +1,0 @@
-alice:
-  email: alice@domain.com
-  encrypted_password: <%= User.new.send(:password_digest, "password123") %>
-  confirmed_at: <%= Time.now %>
-
