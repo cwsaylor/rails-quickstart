@@ -1,7 +1,7 @@
 gem 'country_select'
 gem 'font-awesome-rails'
 # gem 'jquery-turbolinks'
-gem 'slim-rails'
+gem 'kaminari'
 gem 'slim-rails'
 
 remove_file "app/views/layouts/application.html.erb"
