@@ -42,4 +42,7 @@ after_bundle do
 
     EOS
   end
+
+  copy_file "templates/devise/users.rb", "test/factories/users.rb"
+  copy_file "templates/devise/users_preview.rb", "test/mailers/previews/users_preview.rb"
 end

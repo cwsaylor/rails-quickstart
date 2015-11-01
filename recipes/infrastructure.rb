@@ -8,6 +8,10 @@ copy_file "templates/infrastructure/Procfile", "Procfile"
 copy_file "templates/infrastructure/unicorn.rb", "config/unicorn.rb"
 copy_file "templates/infrastructure/redis.rb", "config/initializers/redis.rb"
 
+empty_directory "app/presenters"
+empty_directory "app/services"
+create_file "app/presenters/.gitkeep"
+create_file "app/services/.gitkeep"
 create_file ".env"
 
 application(nil, env: "development") do
