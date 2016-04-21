@@ -30,12 +30,12 @@ append_file ".gitignore" do
 end
 
 inject_into_file "Gemfile", after: "source 'https://rubygems.org'\n" do
-  "ruby '2.2.3'\n"
+  "ruby '2.3.0'\n"
 end
 
 create_file ".ruby-version" do
   <<-EOS
-2.2.3
+2.3.0
   EOS
 end
 

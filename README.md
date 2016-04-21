@@ -18,7 +18,7 @@ It includes:
 
 ## Requirements
 
-* Ruby 2.2.3
+* Ruby 2.3.0
 * Bundler
 * Rails 4.2
 * Git
