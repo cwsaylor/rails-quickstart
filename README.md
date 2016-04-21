@@ -1,11 +1,10 @@
 # Rails Quickstart Template
 
-This template configures a Rails 4.2 app for production level readiness on Heroku.
+This template configures a Rails 5 app for production level readiness on Heroku.
 
 It includes:
 
 * Twitter Bootstrap or Zurb Foundation
-* Simple Form
 * Devise
 * Heroku
 * Slim
@@ -20,7 +19,7 @@ It includes:
 
 * Ruby 2.3.0
 * Bundler
-* Rails 4.2
+* Rails 5.0
 * Git
 
 ## Usage
@@ -30,10 +29,10 @@ It includes:
     cd appname
     foreman start
 
-Navigate to http://0.0.0.0:5000
+Navigate to http://0.0.0.0:3000
 
 You will want to secure your sidekiq job admin.
-http://0.0.0.0:5000/sidekiq
+http://0.0.0.0:3000/sidekiq
 
 See here:
 https://github.com/mperham/sidekiq/wiki/Monitoring
@@ -47,11 +46,13 @@ then commit your changes.
 ## Heroku Setup Notes
 
     heroku create
-    heroku addons:create sendgrid:starter
-    heroku addons:create redistogo:nano
-    heroku addons:create memcachier:dev
-    heroku addson:create rollbar
     git push heroku master
+    heroku addons:create sendgrid:starter
+    heroku addons:create heroku-redis:hobby-dev
+    heroku addons:create memcachier:dev
+    heroku addson:create rollbar:free
+    heroku addons:create newrelic:wayne
+    heroku config:set NEW_RELIC_APP_NAME='Your Application Name'
     heroku run rake db:migrate
     heroku restart
 
