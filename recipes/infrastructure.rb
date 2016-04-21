@@ -1,11 +1,10 @@
 gem 'foreman'
 gem 'redis'
 gem 'rollbar'
-gem 'unicorn', group: :production
 gem "dotenv-rails", group: [:development, :test]
 
 copy_file "templates/infrastructure/Procfile", "Procfile"
-copy_file "templates/infrastructure/unicorn.rb", "config/unicorn.rb"
+copy_file "templates/infrastructure/puma.rb", "config/puma.rb"
 copy_file "templates/infrastructure/redis.rb", "config/initializers/redis.rb"
 
 empty_directory "app/presenters"
