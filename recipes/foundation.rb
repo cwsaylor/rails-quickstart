@@ -1,6 +1,5 @@
 gem 'foundation-rails', github: 'zurb/foundation-rails'
 gem 'foundation-icons-sass-rails'
-gem 'simple_form'
 
 append_file "app/assets/javascripts/application.js" do
   <<-EOS
@@ -18,6 +17,5 @@ copy_file "templates/foundation/interchange_helper.rb", "app/helpers/interchange
 copy_file "templates/foundation/flash_helper.rb"      , "app/helpers/flash_helper.rb"
 
 after_bundle do
-  generate "simple_form:install --foundation"
   generate "foundation:install -s --slim"
 end

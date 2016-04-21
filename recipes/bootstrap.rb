@@ -1,6 +1,5 @@
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass'
-gem 'simple_form'
 
 remove_file "app/views/layouts/application.html.slim"
 remove_file "app/assets/stylesheets/application.scss"
@@ -11,8 +10,4 @@ copy_file "templates/bootstrap/flash_helper.rb"      , "app/helpers/flash_helper
 
 append_file "app/assets/javascripts/application.js" do
   "//= require bootstrap-sprockets"
-end
-
-after_bundle do
-  generate "simple_form:install --bootstrap"
 end
