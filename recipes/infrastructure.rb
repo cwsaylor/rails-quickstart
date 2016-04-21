@@ -11,7 +11,10 @@ empty_directory "app/presenters"
 empty_directory "app/services"
 create_file "app/presenters/.gitkeep"
 create_file "app/services/.gitkeep"
-create_file ".env"
+
+create_file ".env" do
+  "REDIS_URL=redis://localhost:6379"
+end
 
 application(nil, env: "development") do
   "config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n"
