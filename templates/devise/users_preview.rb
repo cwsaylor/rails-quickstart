@@ -1,4 +1,4 @@
-# Preview all emails at http://localhost:3000/rails/mailers/foo
+# Preview all emails at http://localhost:3000/rails/mailers
 class DeviseMailerPreview < ActionMailer::Preview
   def confirmation_instructions
     user = FactoryGirl.create(:user)

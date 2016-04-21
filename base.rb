@@ -3,10 +3,10 @@ def source_paths
 end
 
 @activeadmin = yes?("Install Activeadmin?")
+@foundation  = yes?("Install Foundation?")
 @bootstrap   = yes?("Install Bootstrap?")
 @devise      = yes?("Install Devise?")
 # @ember       = yes?("Install Ember")
-@foundation  = yes?("Install Foundation?")
 @sendgrid    = yes?("Send email with Sendgrid?")
 
 apply "recipes/infrastructure.rb"
