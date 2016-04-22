@@ -1,11 +1,24 @@
 # Add for token https://github.com/lynndylanhurley/devise_token_auth
-gem 'devise'
-gem 'devise-async'
+gem 'devise', github: 'plataformatec/devise'
+# gem 'devise-async'
 
 after_bundle do
   generate "devise:install"
   generate "devise user"
   generate "devise:views"
+  generate "devise:controllers users"
+
+  inject_into_file "config/routes.rb", after: "devise_for :users" do
+  <<-EOS
+    , controllers: {
+    confirmations:       'users/confirmations',
+    passwords:           'users/passwords',
+    registrations:       'users/registrations',
+    sessions:            'users/sessions',
+    unlocks:             'users/unlocks'
+  }
+  EOS
+  end
 
   run "bundle exec rake db:create"
 
@@ -15,13 +28,14 @@ after_bundle do
 
   run "bundle exec rake db:migrate"
 
-  create_file "config/initializers/devise_async.rb" do
-    <<-EOS
-    Devise::Async.backend = :sidekiq
-    EOS
-  end
+  # create_file "config/initializers/devise_async.rb" do
+  #   <<-EOS
+  #   Devise::Async.backend = :sidekiq
+  #   EOS
+  # end
 
-  inject_into_file "app/models/user.rb", ":async, :confirmable, ", after: "database_authenticatable, "
+  # inject_into_file "app/models/user.rb", ":async, :confirmable, ", after: "database_authenticatable, "
+  inject_into_file "app/models/user.rb", ":confirmable, ", after: "database_authenticatable, "
 
   application(nil, env: "production") do
     <<-EOS
