@@ -1,5 +1,5 @@
 gem 'sidekiq'
-gem 'sinatra', require: nil
+gem 'sinatra', github: 'sinatra', require: nil
 
 append_to_file 'Procfile', 'worker: bundle exec sidekiq'
 
