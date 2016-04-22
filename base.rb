@@ -7,7 +7,6 @@ end
 @bootstrap   = yes?("Install Bootstrap?")
 @devise      = yes?("Install Devise?")
 # @ember       = yes?("Install Ember")
-@sendgrid    = yes?("Send email with Sendgrid?")
 
 apply "recipes/infrastructure.rb"
 apply "recipes/frontend.rb"
@@ -20,7 +19,7 @@ apply "recipes/foundation.rb" if @foundation
 apply "recipes/heroku.rb"
 apply "recipes/memcached.rb"
 # apply "recipes/resque.rb"
-apply "recipes/sendgrid.rb" if @sendgrid
+apply "recipes/sendgrid.rb"
 apply "recipes/sidekiq.rb"
 apply "recipes/testing.rb"
 
