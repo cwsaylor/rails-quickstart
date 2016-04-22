@@ -1,12 +1,12 @@
 gem 'foundation-rails', github: 'zurb/foundation-rails'
 gem 'foundation-icons-sass-rails'
 
-append_file "app/assets/javascripts/application.js" do
-  <<-EOS
-//= require foundation
-$(document).foundation();
-  EOS
-end
+# append_file "app/assets/javascripts/application.js" do
+#   <<-EOS
+# //= require foundation
+# $(document).foundation();
+#   EOS
+# end
 
 remove_file "app/views/layouts/application.html.slim"
 remove_file "app/assets/stylesheets/application.scss"

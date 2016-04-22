@@ -1,0 +1,14 @@
+.row
+  .small-12.medium-6.medium-offset-3.columns
+    h2
+      | Forgot your password?
+    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+      = devise_error_messages!
+      .row
+        .small-12.columns
+          = f.label :email
+          = f.email_field :email, autofocus: true
+      .row
+        .small-12.columns
+          = f.submit "Send me reset password instructions", class: "button"
+    = render "devise/shared/links"

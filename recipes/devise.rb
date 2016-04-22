@@ -5,12 +5,14 @@ gem 'devise', github: 'plataformatec/devise'
 after_bundle do
   generate "devise:install"
   generate "devise user"
-  generate "devise:views"
+  # generate "devise:views"
   generate "devise:controllers users"
 
-  inject_into_file "config/routes.rb", after: "devise_for :users" do
+  directory "templates/foundation/devise", "app/views/devise"
+
+  gsub_file "config/routes.rb", /^\s*devise_for :users\s*$/ do
   <<-EOS
-    , controllers: {
+  devise_for :users, controllers: {
     confirmations:       'users/confirmations',
     passwords:           'users/passwords',
     registrations:       'users/registrations',
@@ -35,26 +37,23 @@ after_bundle do
   # end
 
   # inject_into_file "app/models/user.rb", ":async, :confirmable, ", after: "database_authenticatable, "
-  inject_into_file "app/models/user.rb", ":confirmable, ", after: "database_authenticatable, "
+  # inject_into_file "app/models/user.rb", ":confirmable, ", after: "database_authenticatable, "
 
   application(nil, env: "production") do
-    <<-EOS
-
+  <<-EOS
     config.to_prepare { Devise::SessionsController.force_ssl }
     config.to_prepare { Devise::RegistrationsController.force_ssl }
     config.to_prepare { Devise::PasswordsController.force_ssl }
-
-    EOS
+  EOS
   end
 
   append_to_file 'test/test_helper.rb' do
-    <<-EOS
+  <<-EOS
 
   class ActionController::TestCase
     include Devise::TestHelpers
   end
-
-    EOS
+  EOS
   end
 
   copy_file "templates/devise/users.rb", "test/factories/users.rb"
