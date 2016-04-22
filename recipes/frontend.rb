@@ -13,5 +13,7 @@ copy_file "templates/frontend/application.scss", "app/assets/stylesheets/applica
 gsub_file "app/assets/javascripts/application.js", "//= require_tree .\n", ""
 # inject_into_file "app/assets/javascripts/application.js", "//= require jquery.turbolinks\n", after: "//= require jquery\n"
 
-generate "controller pages index --no-helper --no-assets"
-route "root to: 'pages#index'"
+after_bundle do
+  generate "controller pages index --no-helper --no-assets"
+  route "root to: 'pages#index'"
+end
