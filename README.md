@@ -1,26 +1,45 @@
 # Rails Quickstart Template
 
 This template configures a Rails 5 app for production level readiness on Heroku.
+It's highly opinionated about the technologies used.
+The heroku services were chosen based on having a free account.
 
 It includes:
 
-* Twitter Bootstrap or Zurb Foundation
-* Devise
-* Heroku
+* Zurb Foundation 6 (Optional)
+* Devise (Optional)
+* Active Admin (Optional)
+* Font Awesome
+* Country select
+* Kaminari
 * Slim
+* Heroku
 * Foreman
+* dotenv-rails
 * Unicorn
 * Redis
 * Sidekiq
 * Dalli
-* Active Admin
+* Rollbar
+* Newrelic
 
 ## Requirements
 
+* Rails 5.0
 * Ruby 2.3.0
 * Bundler
-* Rails 5.0
 * Git
+* Redis
+* Memcached
+* Heroku account
+
+## Other nifty features
+
+* Generates a pages controller with an index mapped to root url
+* Controller and action names are added to the body tag as classes for css targetting.
+* Replaces application.css with application.scss
+* Force explicit javascript requires in application.js by removing require_tree .
+* Create a presenter and service folder in app/
 
 ## Usage
 
