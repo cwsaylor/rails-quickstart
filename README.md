@@ -1,7 +1,8 @@
 # Rails Quickstart Template
 
 This template configures a Rails 5 app for production level readiness on Heroku.
-It's highly opinionated about the technologies used.
+It's highly opinionated about the technologies used. If you build SPA's, this is not for you.
+I prefer to build The Rails Way.
 The heroku services were chosen based on having a free account.
 
 It includes:
@@ -35,11 +36,11 @@ It includes:
 
 ## Other nifty features
 
-* Generates a pages controller with an index mapped to root url
+* Generates a pages controller with an index mapped to root url.
 * Controller and action names are added to the body tag as classes for css targetting.
-* Replaces application.css with application.scss
-* Force explicit javascript requires in application.js by removing require_tree .
-* Create a presenter and service folder in app/
+* Replaces application.css with application.scss.
+* Force explicit javascript requires in application.js by removing require_tree.
+* Create presenter and service folders in app/.
 
 ## Usage
 
