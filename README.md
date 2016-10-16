@@ -7,6 +7,7 @@ This is for those who build The Rails Way.
 It includes:
 
 * Zurb Foundation 6
+* Zurb Foundation for Emails
 * Font Awesome
 * Slim
 * Foreman

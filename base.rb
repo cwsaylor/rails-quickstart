@@ -19,8 +19,10 @@ gem 'dalli'
 gem 'font-awesome-rails'
 gem 'foreman'
 gem 'foundation-rails'
+gem 'inky-rb', require: 'inky'
 gem 'meta_request', group: :development
 gem 'newrelic_rpm', group: :production
+gem 'premailer-rails'
 gem 'rack-timeout', group: :production
 gem 'redis'
 gem 'rollbar'
@@ -94,18 +96,26 @@ run "bundle install"
 
 after_bundle do
   run "bundle exec rails db:create"
-  # run "bundle exec spring binstub --all"
 
   generate "controller pages index --no-helper --no-assets"
   route "root to: 'pages#index'"
 
-  generate "foundation:install -s --slim"
+  generate "rollbar"
+  generate "inky:install"
+  generate "foundation:install -s"
+
   remove_file "app/views/layouts/application.html.erb"
+  remove_file "app/assets/stylesheets/application.css"
+  remove_file "app/assets/javascripts/application.js"
+
+  copy_file "files/application.html.slim", "app/views/layouts/application.html.slim"
+  copy_file "files/application.scss",      "app/assets/stylesheets/application.scss"
+  copy_file "files/application.js",        "app/assets/javascripts/application.js"
 
   prepend_file "config/routes.rb", "require 'sidekiq/web'\n"
   route "mount Sidekiq::Web => '/sidekiq'"
 
-  generate "rollbar"
+  append_file "config/initializers/assets.rb", "Rails.application.config.assets.precompile += %w( foundation_emails.css )"
 
   run %Q(bundle exec newrelic install --license_key="'<%= ENV["NEW_RELIC_LICENSE_KEY"] %>'" "#{app_name}")
 
