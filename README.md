@@ -2,51 +2,44 @@
 
 This template configures a Rails 5 app for production level readiness on Heroku.
 It's highly opinionated about the technologies used. If you build SPA's, this is not for you.
-I prefer to build The Rails Way.
-The heroku services were chosen based on having a free account.
+This is for those who build The Rails Way.
 
 It includes:
 
-* Zurb Foundation 6 (Optional)
-* Devise (Optional)
-* Active Admin (Optional)
+* Zurb Foundation 6
 * Font Awesome
-* Country select
-* Kaminari
 * Slim
-* Heroku
 * Foreman
 * dotenv-rails
-* Unicorn
-* Redis
 * Sidekiq
 * Dalli
-* Rollbar
-* Newrelic
+* Sendgrid
+* AASM
+* Meta Request for use with [RailsPanel](https://github.com/dejan/rails_panel)
+* Mailcatcher
 
 ## Requirements
 
 * Rails 5.0
-* Ruby 2.3.0
+* Ruby 2.3.1
 * Bundler
 * Git
 * Redis
 * Memcached
 * Heroku account
+* [Mailcatcher](https://mailcatcher.me/)
 
 ## Other nifty features
 
 * Generates a pages controller with an index mapped to root url.
-* Controller and action names are added to the body tag as classes for css targetting.
-* Replaces application.css with application.scss.
-* Force explicit javascript requires in application.js by removing require_tree.
-* Create presenter and service folders in app/.
 
 ## Usage
 
     git clone git@github.com:cwsaylor/rails-quickstart.git
     rails new appname -m ./rails-quickstart/base.rb -d postgresql
     cd appname
+    rails db:create
+    rails db:migrate
     foreman start
 
 Navigate to http://0.0.0.0:3000
@@ -57,12 +50,6 @@ http://0.0.0.0:3000/sidekiq
 See here:
 https://github.com/mperham/sidekiq/wiki/Monitoring
 
-You may want to clean up the Gemfile as the template process puts gems in an odd order,
-then commit your changes.
-
-    git add .
-    git commit -m "Initial Rails app"
-
 ## Heroku Setup Notes
 
     heroku create
@@ -70,11 +57,15 @@ then commit your changes.
     heroku addons:create sendgrid:starter
     heroku addons:create heroku-redis:hobby-dev
     heroku addons:create memcachier:dev
-    heroku addson:create rollbar:free
+    heroku addons:create rollbar:free
     heroku addons:create newrelic:wayne
-    heroku config:set NEW_RELIC_APP_NAME='Your Application Name'
     heroku run rake db:migrate
     heroku restart
+
+Set the NEW_RELIC_LICENSE_KEY and ROLLBAR_ACCESS_TOKEN environment variables in .env to use in development mode.
+
+    echo "NEW_RELIC_LICENSE_KEY=$(heroku config:get NEW_RELIC_LICENSE_KEY)" >> .env
+    echo "ROLLBAR_ACCESS_TOKEN=$(heroku config:get ROLLBAR_ACCESS_TOKEN)" >> .env
 
 ## Thanks
 
