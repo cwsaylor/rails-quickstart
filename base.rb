@@ -110,6 +110,7 @@ after_bundle do
 
   copy_file "files/application.html.slim", "app/views/layouts/application.html.slim"
   copy_file "files/application.scss",      "app/assets/stylesheets/application.scss"
+  copy_file "files/_card.scss",            "app/assets/stylesheets/_card.scss"
   copy_file "files/application.js",        "app/assets/javascripts/application.js"
 
   prepend_file "config/routes.rb", "require 'sidekiq/web'\n"
