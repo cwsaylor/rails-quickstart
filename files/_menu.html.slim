@@ -1,0 +1,35 @@
+.top-bar
+  .top-bar-title
+    span[data-responsive-toggle="responsive-menu" data-hide-for="medium"]
+      button.menu-icon.dark[type="button" data-toggle]
+    strong
+      | Site Title
+  #responsive-menu
+    .top-bar-left
+      ul.dropdown.menu[data-dropdown-menu]
+        li
+          a[href="#"]
+            | One
+          ul.menu.vertical
+            li
+              a[href="#"]
+                | One
+            li
+              a[href="#"]
+                | Two
+            li
+              a[href="#"]
+                | Three
+        li
+          a[href="#"]
+            | Two
+        li
+          a[href="#"]
+            | Three
+    .top-bar-right
+      ul.menu
+        li
+          input[type="search" placeholder="Search"]
+        li
+          button.button[type="button"]
+            | Search

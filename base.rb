@@ -109,6 +109,7 @@ after_bundle do
   remove_file "app/assets/javascripts/application.js"
 
   copy_file "files/application.html.slim", "app/views/layouts/application.html.slim"
+  copy_file "files/_menu.html.slim",       "app/views/layouts/_menu.html.slim"
   copy_file "files/application.scss",      "app/assets/stylesheets/application.scss"
   copy_file "files/_card.scss",            "app/assets/stylesheets/_card.scss"
   copy_file "files/application.js",        "app/assets/javascripts/application.js"
