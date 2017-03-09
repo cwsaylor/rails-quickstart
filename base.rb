@@ -5,7 +5,7 @@ end
 app_name = ask("NewRelic application name?")
 
 inject_into_file "Gemfile", after: "source 'https://rubygems.org'\n" do
-  "ruby '2.3.1'\n"
+  "ruby '2.3.3'\n"
 end
 
 gem_group :test, :development do

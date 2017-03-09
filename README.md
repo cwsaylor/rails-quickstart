@@ -21,8 +21,8 @@ It includes:
 
 ## Requirements
 
-* Rails 5.0
-* Ruby 2.3.1
+* Rails 5
+* Ruby 2.3.3
 * Bundler
 * Git
 * Redis
