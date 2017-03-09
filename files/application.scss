@@ -1,9 +1,1 @@
 @import "foundation_and_overrides";
-@import "card";
-
-// Fix Top bar title vertical alignment until Foundation 6.3 comes out
-// https://github.com/zurb/foundation-sites/pull/9143
-.top-bar-title {
-  padding: 0.7rem 0;
-  line-height: 1;
-}
