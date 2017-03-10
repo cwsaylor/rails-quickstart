@@ -15,15 +15,18 @@ gem_group :test, :development do
 end
 
 gem 'aasm'
+gem 'annotate', group: :development
 gem 'dalli'
 gem 'font-awesome-rails'
 gem 'foreman'
 gem 'foundation-rails'
 gem 'inky-rb', require: 'inky'
 gem 'meta_request', group: :development
+gem 'meta-tags'
 gem 'newrelic_rpm', group: :production
 gem 'premailer-rails'
 gem 'rack-timeout', group: :production
+gem 'rails-erd', group: :development
 gem 'redis'
 gem 'rollbar'
 gem 'sidekiq'
