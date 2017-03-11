@@ -20,6 +20,7 @@ This is for those who build The Rails Way.
 * [Rails ERD](https://github.com/voormedia/rails-erd)
 * [Annotate](https://github.com/ctran/annotate_models)
 * [Meta Tags](https://github.com/kpumuk/meta-tags)
+* [Rollbar](https://github.com/rollbar/rollbar-gem)
 
 ## Requirements
 
@@ -43,10 +44,8 @@ This is for those who build The Rails Way.
     brew install graphviz redis memcached
 
     git clone git@github.com:cwsaylor/rails-quickstart.git
-    rails new appname -m ./rails-quickstart/base.rb -d postgresql
-    cd appname
-    rails db:create
-    rails db:migrate
+    rails new APPNAME -m ./rails-quickstart/base.rb -d postgresql
+    cd APPNAME
     foreman start
 
 Navigate to http://0.0.0.0:3000
@@ -60,37 +59,46 @@ https://github.com/mperham/sidekiq/wiki/Monitoring
 ### Heroku Setup Notes
 
     heroku create
-    git push heroku master
     heroku addons:create sendgrid:starter
     heroku addons:create heroku-redis:hobby-dev
     heroku addons:create memcachier:dev
     heroku addons:create rollbar:free
     heroku addons:create newrelic:wayne
+    git push heroku master
     heroku run rake db:migrate
     heroku restart
 
 Set the NEW_RELIC_LICENSE_KEY and ROLLBAR_ACCESS_TOKEN environment variables in .env to use in development mode.
 
-    echo "NEW_RELIC_LICENSE_KEY=$(heroku config:get NEW_RELIC_LICENSE_KEY)" >> .env
-    echo "ROLLBAR_ACCESS_TOKEN=$(heroku config:get ROLLBAR_ACCESS_TOKEN)" >> .env
+    heroku config -s | grep ROLLBAR_ACCESS_TOKEN >> .env
+    heroku config -s | grep NEW_RELIC_LICENSE_KEY >> .env
 
 ### Rails ERD Usage
 
-`bundle exec erd`
+    bundle exec erd
+    open erd.pdf
 
 ### Mailcatcher Usage
 
-`mailcatcher`
+    mailcatcher
 
 Go to http://localhost:1080/
 
+### Annotate Usage
+
+    annotate
+
 ## Other Awesome Gems
 
-* [Devise](https://github.com/plataformatec/devise)
-* [Smarter CSV](https://github.com/tilo/smarter_csv)
+* [Active Admin](https://github.com/activeadmin/activeadmin)
 * [Bundler Audit](https://github.com/rubysec/bundler-audit)
 * [Chartkick](https://github.com/ankane/chartkick)
+* [Devise](https://github.com/plataformatec/devise)
+* [Kaminari](https://github.com/kaminari/kaminari)
+* [Pundit](https://github.com/elabs/pundit)
 * [Searchkick](https://github.com/ankane/searchkick)
+* [Smarter CSV](https://github.com/tilo/smarter_csv)
+
 * [Everything by Ankane](https://github.com/ankane)
 
 ## Thanks

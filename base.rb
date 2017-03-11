@@ -34,7 +34,7 @@ gem 'slim-rails'
 
 copy_file "files/ruby-version",  ".ruby-version"
 copy_file "files/Procfile",      "Procfile"
-copy_file "files/puma.rb",       "config/puma.rb"
+copy_file "files/puma.rb",       "config/puma.rb", force: true
 copy_file "files/slugignore",    ".slugignore"
 copy_file "files/active_job.rb", "config/initializers/active_job.rb"
 copy_file "files/redis.rb",      "config/initializers/redis.rb"
