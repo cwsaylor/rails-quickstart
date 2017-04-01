@@ -96,6 +96,7 @@ Go to http://localhost:1080/
 * [Devise](https://github.com/plataformatec/devise)
 * [Kaminari](https://github.com/kaminari/kaminari)
 * [Pundit](https://github.com/elabs/pundit)
+* [Scenic](https://github.com/thoughtbot/scenic)
 * [Searchkick](https://github.com/ankane/searchkick)
 * [Smarter CSV](https://github.com/tilo/smarter_csv)
 
