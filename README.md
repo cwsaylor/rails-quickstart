@@ -15,6 +15,8 @@ It supports either PostgreSQL or SQLite3.
 * Bundler
 * Git
 * SQLite3 or PostgreSQL
+  * For PostgreSQL, I recommend installing it via docker like this. It sets the trusted user to your current username and matches up with the database.yml.
+  * `docker run -d --name postgres17 -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_USER=$USER --restart unless-stopped -p "127.0.0.1:5432:5432" -v postgres-data:/var/lib/postgresql/data postgres:17
 * [RailsPanel](https://github.com/dejan/rails_panel)
 * [Mailcatcher](https://mailcatcher.me/)
 

@@ -13,8 +13,11 @@ end
 
 # Add custom gems
 gem "mission_control-jobs"
-gem_group :development do
+
+inject_into_file "Gemfile", after: "group :development do\n" do
+<<-EOS
   gem "meta_request"
+EOS
 end
 
 run "bundle install"
