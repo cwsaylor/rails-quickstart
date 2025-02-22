@@ -2,7 +2,7 @@ def source_paths
   super + [File.expand_path(File.dirname(__FILE__) + "/templates")]
 end
 
-app_name = Pathname.new(`pwd`).split.last.to_s
+app_name = Pathname.new(`pwd`).split.last.to_s.strip
 
 # Ignore MacOS files
 append_file ".gitignore" do
@@ -68,6 +68,43 @@ after_bundle do
 
   git add: ".", commit: %(-m "Generate Rails 8 authentication with a login seed and tests")
 
+  # Style the application layout
+  gsub_file "app/views/layouts/application.html.erb", /\s*<body>[\s\S]*?<\/body>\s*/i do
+  <<-EOS
+
+  <body class="min-h-screen bg-white font-sans flex flex-col">
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold text-gray-900"><%= link_to #{app_name.capitalize}, root_path %></h1>
+          <% if authenticated? %>
+            <%= button_to "Logout", session_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
+          <% else %>
+            <%= link_to "Login", new_session_path, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <%= yield %>
+      </div>
+    </main>
+
+    <footer class="bg-gray-50">
+      <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-gray-500 text-sm">
+          &copy; <%= Time.current.year %> #{app_name.capitalize}. All rights reserved.
+        </p>
+      </div>
+    </footer>
+  </body>
+  EOS
+  end
+
+  git add: ".", commit: %(-m "Style the application layout a bit better with Tailwind")
+
   # Generate a home page
   # TODO style home page
   generate "controller", "pages", "index", "--no-helper", "--no-assets"
@@ -75,7 +112,7 @@ after_bundle do
   gsub_file "config/routes.rb", %(get "pages/index"), %(root to: "pages#index")
   template "pages_controller_test.rb", "test/controllers/pages_controller_test.rb", force: true
 
-  git add: ".", commit: "-m 'Generate a home page and root route with tests'"
+  git add: ".", commit: %(-m "Generate a home page and root route with tests")
 
   # Generate an admin dashboard
   # TODO style admin page
@@ -85,7 +122,7 @@ after_bundle do
   template "admin_base_controller.rb", "app/controllers/admin/base_controller.rb"
   template "dashboard_controller_test.rb", "test/controllers/admin/dashboard_controller_test.rb", force: true
 
-  git add: ".", commit: "-m 'Generate an admin dashboard with tests'"
+  git add: ".", commit: %(-m "Generate an admin dashboard with tests")
 
   # Configure Solid Queue in development
   environment(nil, env: "development") do
