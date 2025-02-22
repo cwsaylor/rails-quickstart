@@ -16,7 +16,7 @@ It supports either PostgreSQL or SQLite3.
 * Git
 * SQLite3 or PostgreSQL
   * For PostgreSQL, I recommend installing it via docker like this. It sets the trusted user to your current username and matches up with the database.yml.
-  * `docker run -d --name postgres17 -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_USER=$USER --restart unless-stopped -p "127.0.0.1:5432:5432" -v postgres-data:/var/lib/postgresql/data postgres:17
+  * `docker run -d --name postgres17 -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_USER=$USER --restart unless-stopped -p "127.0.0.1:5432:5432" -v postgres-data:/var/lib/postgresql/data postgres:17`
 * [RailsPanel](https://github.com/dejan/rails_panel)
 * [Mailcatcher](https://mailcatcher.me/)
 
@@ -29,12 +29,14 @@ It supports either PostgreSQL or SQLite3.
 * Sets up Solid Queue, Cache, and Cable in development
 * Installs mission control dashboard and secures it with Rails 8 authentication
 * bin/jobs added to bin/dev - comment out and move to a separate terminal if too overwhelming
+* Sends email in development to mailcatcher on port 1025
 
 ## Usage & Installation
 
-    rails new APPNAME -d postgresql -c tailwind -m https://github.com/cwsaylor/rails-quickstart.git
-    cd APPNAME
-    bin/dev
+  git clone https://github.com/cwsaylor/rails-quickstart.git 
+  rails new APPNAME -d postgresql -c tailwind -m rails-quickstart/template.rb
+  cd APPNAME
+  bin/dev
 
 Navigate to:
 * http://0.0.0.0:3000
@@ -43,8 +45,8 @@ Navigate to:
 
 ### Mailcatcher Usage
 
-    gem install mailcatcher
-    mailcatcher
+  gem install mailcatcher
+  mailcatcher
 
 Navigate to http://localhost:1080/
 
