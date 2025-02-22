@@ -1,0 +1,47 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV["USER"] %>
+  host: localhost
+  port: 5432
+
+development:
+  primary: &primary_development
+    <<: *default
+    database: <%= app_name %>_development
+  cache:
+    <<: *primary_development
+    database: <%= app_name %>_development_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_development
+    database: <%= app_name %>_development_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_development
+    database: <%= app_name %>_development_cable
+    migrations_paths: db/cable_migrate
+
+test:
+  <<: *default
+  database: <%= app_name %>_test
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: <%= app_name %>_production
+    username: <%= app_name %>
+    password: <%%= ENV["FOO_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: <%= app_name %>_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: <%= app_name %>_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: <%= app_name %>_production_cable
+    migrations_paths: db/cable_migrate
