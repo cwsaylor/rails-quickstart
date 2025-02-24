@@ -30,11 +30,14 @@ It supports either PostgreSQL or SQLite3.
 * Installs mission control dashboard and secures it with Rails 8 authentication
 * bin/jobs added to bin/dev - comment out and move to a separate terminal if too overwhelming
 * Sends email in development to mailcatcher on port 1025
+* Each of these features are optional if you choose to customize
 
 ## Usage & Installation
 
   git clone https://github.com/cwsaylor/rails-quickstart.git 
   rails new APPNAME -d postgresql -c tailwind -m rails-quickstart/template.rb
+or
+  rails new APPNAME -d sqlite3 -c tailwind -m rails-quickstart/template.rb
   cd APPNAME
   bin/dev
 
@@ -49,6 +52,11 @@ Navigate to:
   mailcatcher
 
 Navigate to http://localhost:1080/
+
+## Other useful projects
+
+* https://github.com/ankane/pghero
+* https://github.com/ankane/blazer
 
 ## Copyright
 
