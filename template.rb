@@ -185,6 +185,7 @@ after_bundle do
     # EOS
     # end
 
+    # These next two gsubs are a hack to fix a problem with the above inject_into_files commented out lines
     gsub_file "config/cable.yml", "adapter: async\n" do
     <<-EOS
 
@@ -196,6 +197,8 @@ after_bundle do
   message_retention: 1.day
     EOS
     end
+
+    gsub_file "config/cable.yml", /development:\n[\s\S]*?\n/, "development:\n"
 
     git add: ".", commit: %(-m "Setup Solid Cable in development")
   end
