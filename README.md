@@ -15,8 +15,6 @@ It supports either PostgreSQL or SQLite3.
 * Bundler
 * Git
 * SQLite3 or PostgreSQL
-  * For PostgreSQL, I recommend installing it via docker like this. It sets the trusted user to your current username and matches up with the database.yml.
-  * `docker run -d --name postgres17 -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_USER=$USER --restart unless-stopped -p "127.0.0.1:5432:5432" -v postgres-data:/var/lib/postgresql/data postgres:17`
 * [RailsPanel](https://github.com/dejan/rails_panel)
 * [Mailcatcher](https://mailcatcher.me/)
 
@@ -32,12 +30,29 @@ It supports either PostgreSQL or SQLite3.
 * Sends email in development to mailcatcher on port 1025
 * Each of these features are optional if you choose to customize
 
-## Usage & Installation
+## Installation & Usage
+
+### Postgresql
+
+For PostgreSQL, I recommend installing it via docker like this. It sets the trusted user to your current username and matches up with the database.yml.
+
+  docker run -d --name postgres17 -e POSTGRES_HOST_AUTH_METHOD=trust -e POSTGRES_USER=$USER --restart unless-stopped -p "127.0.0.1:5432:5432" -v postgres-data:/var/lib/postgresql/data postgres:17
+
+### Mailcatcher
+
+  gem install mailcatcher
+  mailcatcher
+
+Navigate to http://localhost:1080/
+
+### Template
 
   git clone https://github.com/cwsaylor/rails-quickstart.git 
+
   rails new APPNAME -d postgresql -c tailwind -m rails-quickstart/template.rb
 or
   rails new APPNAME -d sqlite3 -c tailwind -m rails-quickstart/template.rb
+
   cd APPNAME
   bin/dev
 
@@ -46,12 +61,16 @@ Navigate to:
 * http://0.0.0.0:3000/admin
 * http://0.0.0.0:3000/admin/jobs
 
-### Mailcatcher Usage
+### Admin namespace
 
-  gem install mailcatcher
-  mailcatcher
+If you would like to use the scaffold generators and the admin namespace at the same time, the best way is to break it up into two steps.
 
-Navigate to http://localhost:1080/
+  rails generate model post title:string body:text
+  rails generate scaffold_controller admin/posts --model-name post 
+
+The downside is that you will need to add the form fields yourself.
+
+The other option is to generate a scaffold as normal and copy into the admin folder, fixing the class definitions and routes.
 
 ## Other useful projects
 
