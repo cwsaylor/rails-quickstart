@@ -10,7 +10,6 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
   primary:
     <<: *default
     database: storage/production.sqlite3

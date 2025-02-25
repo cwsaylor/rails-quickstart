@@ -13,6 +13,15 @@ if yes?("Customize defaults?")
   admin           = yes?("Setup admin dashboard?")
   homepage        = yes?("Setup pages controller and homepage?")
   mailcatcher     = yes?("Setup mailcatcher")
+else
+  solid_trifecta  = true
+  mission_control = true
+  rails_panel     = true
+  auth            = true
+  tailwind        = true
+  admin           = true
+  homepage        = true
+  mailcatcher     = true
 end
 
 # Ignore MacOS files
@@ -28,9 +37,9 @@ end
 
 if rails_panel
   inject_into_file "Gemfile", after: "group :development do\n" do
-  <<-EOS
-    gem "meta_request"
-  EOS
+    <<-EOS
+  gem "meta_request"
+    EOS
   end
 end
 
@@ -48,7 +57,7 @@ after_bundle do
     db = "sqlite3"
   end
 
-  if ! db.nil? & mission_control
+  if ! db.nil?
     template "database_#{db}.yml.tt", "config/database.yml", force: true
   end
 
@@ -69,13 +78,13 @@ after_bundle do
 
     # Over-ride password reset token expiration time to somethign sane
     inject_into_file "app/models/user.rb", before: /^end$/ do
-    <<-EOS
+      <<-EOS
 
-    generates_token_for :password_reset, expires_in: 4.hours do
-      # Last 10 characters of password salt, which changes when password is updated:
-      password_salt&.last(10)
-    end
-    EOS
+  generates_token_for :password_reset, expires_in: 4.hours do
+    # Last 10 characters of password salt, which changes when password is updated:
+    password_salt&.last(10)
+  end
+      EOS
     end
 
     rails_command "db:migrate"
@@ -137,8 +146,8 @@ after_bundle do
   if admin
     generate "controller", "admin/dashboard", "index"
     gsub_file "config/routes.rb", %(get "dashboard/index"), %(root to: "dashboard#index")
-    gsub_file "app/controllers/admin/dashboard_controller.rb", "ApplicationController", %(Admin::BaseController)
-    template "admin_base_controller.rb", "app/controllers/admin/base_controller.rb"
+    # gsub_file "app/controllers/admin/dashboard_controller.rb", "ApplicationController", %(Admin::BaseController)
+    # template "admin_base_controller.rb", "app/controllers/admin/base_controller.rb"
     template "dashboard_controller_test.rb", "test/controllers/admin/dashboard_controller_test.rb", force: true
 
     git add: ".", commit: %(-m "Generate an admin dashboard with tests")
@@ -166,17 +175,27 @@ after_bundle do
     git add: ".", commit: %(-m "Setup Solid Cache in development")
 
     # Configure Solid Cable in development
-    inject_into_file "config/cable.yml", after: "adapter: async\n" do
+    # inject_into_file "config/cable.yml", after: "adapter: async\n" do
+    # <<-EOS
+    # connects_to:
+    #   database:
+    #     writing: cable
+    # polling_interval: 0.1.seconds
+    # message_retention: 1.day
+    # EOS
+    # end
+
+    gsub_file "config/cable.yml", "adapter: async\n" do
     <<-EOS
-    connects_to:
-      database:
-        writing: cable
-    polling_interval: 0.1.seconds
-    message_retention: 1.day    
+
+  adapter: solid_cable
+  connects_to:
+    database:
+      writing: cable
+  polling_interval: 0.1.seconds
+  message_retention: 1.day
     EOS
     end
-
-    gsub_file "config/cable.yml", "adapter: async", "adapter: solid_cable"
 
     git add: ".", commit: %(-m "Setup Solid Cable in development")
   end
