@@ -76,6 +76,7 @@ The other option is to generate a scaffold as normal and copy into the admin fol
 
 * https://github.com/ankane/pghero
 * https://github.com/ankane/blazer
+* https://www.stimulus-components.com/
 
 ## Copyright
 
