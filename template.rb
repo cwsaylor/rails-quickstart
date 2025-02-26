@@ -13,6 +13,7 @@ if yes?("Customize defaults?")
   admin           = yes?("Setup admin dashboard?")
   homepage        = yes?("Setup pages controller and homepage?")
   mailcatcher     = yes?("Setup mailcatcher")
+  flowbite        = yes?("Setup Flowbite?")
 else
   solid_trifecta  = true
   mission_control = true
@@ -22,6 +23,7 @@ else
   admin           = true
   homepage        = true
   mailcatcher     = true
+  flowbite        = true
 end
 
 # Ignore MacOS files
@@ -111,6 +113,19 @@ after_bundle do
           </div>
         </div>
       </header>
+
+      <!-- Horizontal Menu Bar -->
+      <nav class="bg-gray-100 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex space-x-8 overflow-x-auto py-3">
+            <!-- Add your menu items here -->
+            <%= link_to "Home", root_path, class: "text-gray-900 hover:text-blue-600 font-medium" %>
+            <%= link_to "Admin", admin_root_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
+            <%= link_to "Jobs", admin_jobs_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
+            <!-- You can add more links as needed -->
+          </div>
+        </div>
+      </nav>
 
       <main class="flex-grow">
         <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
@@ -209,12 +224,12 @@ after_bundle do
       <<-EOS
       # Configure Mission Control
       config.mission_control.jobs.http_basic_auth_enabled = false
-      config.mission_control.jobs.base_controller_class = "Admin::BaseController"
+      config.mission_control.jobs.base_controller_class = "ApplicationController"
 
       EOS
     end
 
-    route %(mount MissionControl::Jobs::Engine, at: "/admin/jobs")
+    route %(mount MissionControl::Jobs::Engine, at: "/admin/jobs", as: :admin_jobs)
 
     git add: ".", commit: %(-m "Setup Mission Control")
   end
@@ -230,5 +245,20 @@ after_bundle do
     end
 
     git add: ".", commit: %(-m "Configure mailcatcher")
+  end
+
+  # Configure Flowbite
+  if flowbite
+    inject_into_file "config/importmap.rb", before: "pin_all_from" do
+      %(pin "flowbite", to: "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.turbo.min.js"\n)
+    end
+
+    append_file "app/javascript/application.js" do
+      %(import "flowbite")
+    end
+
+    inject_into_file "app/views/layouts/application.html.erb", after: "<%# Includes all stylesheet files in app/assets/stylesheets %>\n" do
+      %(    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />\n)
+    end
   end
 end

@@ -29,6 +29,7 @@ It supports either PostgreSQL or SQLite3.
 * bin/jobs added to bin/dev - comment out and move to a separate terminal if too overwhelming
 * Sends email in development to mailcatcher on port 1025
 * Each of these features are optional if you choose to customize
+* Setup [Flowbite](https://flowbite.com/)
 
 ## Installation & Usage
 
