@@ -10,10 +10,10 @@ if yes?("Customize defaults?")
   rails_panel     = yes?("Setup Rails Panel")
   auth            = yes?("Setup Rails 8 authentication")
   tailwind        = yes?("Use Tailwind application layout?")
+  flowbite        = yes?("Setup Flowbite?") if tailwind
   admin           = yes?("Setup admin dashboard?")
   homepage        = yes?("Setup pages controller and homepage?")
   mailcatcher     = yes?("Setup mailcatcher")
-  flowbite        = yes?("Setup Flowbite?")
 else
   solid_trifecta  = true
   mission_control = true
@@ -93,58 +93,6 @@ after_bundle do
     rails_command "db:seed"
 
     git add: ".", commit: %(-m "Generate Rails 8 authentication with a login seed and tests")
-  end
-
-  # Style the application layout
-  if tailwind
-    gsub_file "app/views/layouts/application.html.erb", /\s*<body>[\s\S]*?<\/body>\s*/i do
-    <<-EOS
-
-    <body class="min-h-screen bg-white font-sans flex flex-col">
-      <header class="bg-white shadow">
-        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-bold text-gray-900"><%= link_to #{app_name.capitalize}, root_path %></h1>
-            <% if authenticated? %>
-              <%= button_to "Logout", session_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
-            <% else %>
-              <%= link_to "Login", new_session_path, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
-            <% end %>
-          </div>
-        </div>
-      </header>
-
-      <!-- Horizontal Menu Bar -->
-      <nav class="bg-gray-100 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex space-x-8 overflow-x-auto py-3">
-            <!-- Add your menu items here -->
-            <%= link_to "Home", root_path, class: "text-gray-900 hover:text-blue-600 font-medium" %>
-            <%= link_to "Admin", admin_root_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
-            <%= link_to "Jobs", admin_jobs_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
-            <!-- You can add more links as needed -->
-          </div>
-        </div>
-      </nav>
-
-      <main class="flex-grow">
-        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <%= yield %>
-        </div>
-      </main>
-
-      <footer class="bg-gray-50">
-        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <p class="text-center text-gray-500 text-sm">
-            &copy; <%= Time.current.year %> #{app_name.capitalize}. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </body>
-    EOS
-    end
-
-    git add: ".", commit: %(-m "Style the application layout a bit better with Tailwind")
   end
 
   # Generate a home page
@@ -247,6 +195,58 @@ after_bundle do
     git add: ".", commit: %(-m "Configure mailcatcher")
   end
 
+  # Style the application layout
+  if tailwind
+    gsub_file "app/views/layouts/application.html.erb", /\s*<body>[\s\S]*?<\/body>\s*/i do
+    <<-EOS
+
+    <body class="min-h-screen bg-white font-sans flex flex-col">
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-900"><%= link_to #{app_name.capitalize}, root_path %></h1>
+            <% if authenticated? %>
+              <%= button_to "Logout", session_path, method: :delete, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
+            <% else %>
+              <%= link_to "Login", new_session_path, class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors" %>
+            <% end %>
+          </div>
+        </div>
+      </header>
+
+      <!-- Horizontal Menu Bar -->
+      <nav class="bg-gray-100 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex space-x-8 overflow-x-auto py-3">
+            <!-- Add your menu items here -->
+            <%= link_to "Home", root_path, class: "text-gray-900 hover:text-blue-600 font-medium" %>
+            <%= link_to "Admin", admin_root_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
+            <%= link_to "Jobs", admin_jobs_path, class: "text-gray-500 hover:text-blue-600 font-medium" %>
+            <!-- You can add more links as needed -->
+          </div>
+        </div>
+      </nav>
+
+      <main class="flex-grow">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <%= yield %>
+        </div>
+      </main>
+
+      <footer class="bg-gray-50">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <p class="text-center text-gray-500 text-sm">
+            &copy; <%= Time.current.year %> #{app_name.capitalize}. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </body>
+    EOS
+    end
+
+    git add: ".", commit: %(-m "Style the application layout a bit better with Tailwind")
+  end
+
   # Configure Flowbite
   if flowbite
     inject_into_file "config/importmap.rb", before: "pin_all_from" do
@@ -258,7 +258,7 @@ after_bundle do
     end
 
     inject_into_file "app/views/layouts/application.html.erb", after: "<%# Includes all stylesheet files in app/assets/stylesheets %>\n" do
-      %(    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />\n)
+      %(    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css", "data-turbo-track": "reload" %>\n)
     end
   end
 end
