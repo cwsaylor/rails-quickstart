@@ -30,6 +30,7 @@ It supports either PostgreSQL or SQLite3.
 * Sends email in development to mailcatcher on port 1025
 * Each of these features are optional if you choose to customize
 * Setup [Flowbite](https://flowbite.com/)
+* Styled partials for flash and form error messages
 
 ## Installation & Usage
 
@@ -62,6 +63,13 @@ Navigate to:
 * http://0.0.0.0:3000/admin
 * http://0.0.0.0:3000/admin/jobs
 
+### Flash messages and form errors
+Flash messages are already rendered in the application layout and can be found in `app/views/layouts/_flash.html.erb`.
+
+To use the form error messages, add the following line to your forms inside the form tag, and pass in your model to the model local variable.
+```
+<%= render "layouts/form_errors", model: post %>
+```
 ### Admin namespace
 
 If you would like to use the scaffold generators and the admin namespace at the same time, the best way is to break it up into two steps.

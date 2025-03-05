@@ -197,6 +197,12 @@ after_bundle do
 
   # Style the application layout
   if tailwind
+    copy_file "_flash.html.erb", "app/views/layouts/_flash.html.erb"
+    copy_file "_form_errors.html.erb", "app/views/layouts/_form_errors.html.erb"
+
+    gsub_file "app/views/sessions/new.html.erb", /\s*<% if alert = flash[\s\S]*?<% end %>/, ""
+    gsub_file "app/views/sessions/new.html.erb", /\s*<% if notice = flash[\s\S]*?<% end %>\n/, ""
+
     gsub_file "app/views/layouts/application.html.erb", /\s*<body>[\s\S]*?<\/body>\s*/i do
     <<-EOS
 
@@ -229,6 +235,7 @@ after_bundle do
 
       <main class="flex-grow">
         <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <%= render 'layouts/flash' %>
           <%= yield %>
         </div>
       </main>
@@ -260,5 +267,7 @@ after_bundle do
     inject_into_file "app/views/layouts/application.html.erb", after: "<%# Includes all stylesheet files in app/assets/stylesheets %>\n" do
       %(    <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css", "data-turbo-track": "reload" %>\n)
     end
+
+    git add: ".", commit: %(-m "Setup Flowbite")
   end
 end

@@ -1,0 +1,12 @@
+<% if model.errors.any? %>
+  <div class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+    <div>
+      <span class="font-medium">There are <%= pluralize(model.errors.count, "error") %>:</span>
+        <ul class="mt-1.5 list-disc list-inside">
+          <% model.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
