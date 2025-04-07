@@ -12,7 +12,7 @@ if yes?("Customize defaults?")
   tailwind        = yes?("Use Tailwind application layout?")
   flowbite        = yes?("Setup Flowbite?") if tailwind
   admin           = yes?("Setup admin dashboard?")
-  homepage        = yes?("Setup pages controller and homepage?")
+  homepage        = yes?("Setup site_pages controller and homepage?")
   mailcatcher     = yes?("Setup mailcatcher")
 else
   solid_trifecta  = true
@@ -97,10 +97,10 @@ after_bundle do
 
   # Generate a home page
   if homepage
-    generate "controller", "pages", "index", "--no-helper", "--no-assets"
-    gsub_file "app/controllers/pages_controller.rb", "ApplicationController\n", %(ApplicationController\n  allow_unauthenticated_access\n)
-    gsub_file "config/routes.rb", %(get "pages/index"), %(root to: "pages#index")
-    template "pages_controller_test.rb", "test/controllers/pages_controller_test.rb", force: true
+    generate "controller", "site_pages", "index", "--no-helper", "--no-assets"
+    gsub_file "app/controllers/site_pages_controller.rb", "ApplicationController\n", %(ApplicationController\n  allow_unauthenticated_access\n)
+    gsub_file "config/routes.rb", %(get "site_pages/index"), %(root to: "site_pages#index")
+    template "site_pages_controller_test.rb", "test/controllers/site_pages_controller_test.rb", force: true
 
     git add: ".", commit: %(-m "Generate a home page and root route with tests")
   end
