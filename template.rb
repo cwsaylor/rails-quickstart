@@ -11,19 +11,20 @@ if yes?("Customize defaults?")
   auth            = yes?("Setup Rails 8 authentication")
   tailwind        = yes?("Use Tailwind application layout?")
   flowbite        = yes?("Setup Flowbite?") if tailwind
+  csszero         = yes?("Setup css zero?") unless tailwind
   admin           = yes?("Setup admin dashboard?")
   homepage        = yes?("Setup site_pages controller and homepage?")
   mailcatcher     = yes?("Setup mailcatcher")
-else
-  solid_trifecta  = true
-  mission_control = true
-  rails_panel     = true
-  auth            = true
-  tailwind        = true
-  admin           = true
-  homepage        = true
-  mailcatcher     = true
-  flowbite        = true
+# else
+#   solid_trifecta  = true
+#   mission_control = true
+#   rails_panel     = true
+#   auth            = true
+#   tailwind        = true
+#   admin           = true
+#   homepage        = true
+#   mailcatcher     = true
+#   flowbite        = true
 end
 
 # Ignore MacOS files
@@ -127,7 +128,13 @@ after_bundle do
       EOS
     end
 
-    append_file "Procfile.dev", "jobs: bin/jobs\n"
+    if File.file?("Procfile.dev")
+      append_file "Procfile.dev", "jobs: bin/jobs\n"
+      gsub_file "Procfile.dev", "web: bin/rails server", "web: bin/rails server --binding=0.0.0.0"
+    else
+      copy_file "Procfile.dev", "Procfile.dev"
+      append_file "Procfile.dev", "jobs: bin/jobs\n"
+    end
 
     git add: ".", commit: %(-m "Setup Solid Queue in development")
 
@@ -270,4 +277,11 @@ after_bundle do
 
     git add: ".", commit: %(-m "Setup Flowbite")
   end
+
+  if csszero
+    run "bundle add css-zero"
+    generate "css_zero:install"
+    git add: ".", commit: %(-m "Setup CSS Zero")
+  end
 end
+
